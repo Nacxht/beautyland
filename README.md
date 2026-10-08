@@ -1,3 +1,9 @@
+## Deskripsi Aplikasi
+Sistem Penjualan Produk Beauty Care merupakan aplikasi berbasis web yang digunakan untuk membantu proses penjualan produk beauty care secara lebih terstruktur. Sistem ini memungkinkan admin mengelola data produk, transaksi, pembayaran, dan pengiriman, sedangkan pelanggan dapat melihat produk, melakukan pemesanan, mengunggah bukti pembayaran, serta melihat status pembayaran dan pengiriman.
+
+## Cara Menjalankan
+
+
 ## Definition of Done (DoD)
 
 Sebuah _User Story_ dinyatakan _Done_ apabila:
