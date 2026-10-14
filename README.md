@@ -1,5 +1,5 @@
 ## Deskripsi Aplikasi
-Sistem Penjualan Produk BeautyLand merupakan aplikasi berbasis web yang digunakan untuk membantu proses penjualan produk kecantikan secara lebih terstruktur. 
+Sistem Penjualan Produk BeautyLand merupakan aplikasi berbasis web yang digunakan untuk membantu proses penjualan produk skincare secara lebih terstruktur. 
 
 ## Cara Menjalankan
 
