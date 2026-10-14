@@ -9,11 +9,10 @@ Sistem Penjualan Produk Beauty Care merupakan aplikasi berbasis web yang digunak
 |---|---|---|
 | Product Owner | Afni | Dhila |
 | Scrum Master | Wildan | Ilham |
-| UI/UX | Shella | Lathif |
-| UI/UX | Shella | Ma'wa |
+| UI/UX | Shella | Lathif || Ma'wa |
 | Backend | Ilham | Wildan |
 | Frontend | Dhila | Ilham |
-| QA/Tester | Ma'wa | Wildan |
+| QA/Tester | Ma'wa | Wildan || Afni |
 | Dokumentasi + Branding | Lathif | Shella |
 
 ## Definition of Done (DoD)
