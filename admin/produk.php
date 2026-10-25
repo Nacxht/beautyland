@@ -41,7 +41,7 @@ if($search != ''){
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Produk - MAARS Beauty</title>
+<title>Produk - BeautyLand</title>
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
@@ -293,7 +293,7 @@ tbody tr:hover{
             <h1>Daftar Produk</h1>
 
             <p>
-                Kelola katalog dan stok skincare MAARS Beauty 🛍️
+                Kelola katalog dan stok skincare BeautyLand 🛍️
             </p>
 
         </div>
