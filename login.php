@@ -30,7 +30,7 @@ if (isset($_POST['login'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login — Beautyland</title>
+  <title>Login — BeautyLand</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -308,7 +308,7 @@ if (isset($_POST['login'])) {
 <div class="card">
 
   <div class="brand">
-    <span class="brand-name">Beautyland</span>
+    <span class="brand-name">BeautyLand</span>
   </div>
 
   <div class="form-header">
