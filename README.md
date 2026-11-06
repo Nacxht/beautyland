@@ -1,5 +1,5 @@
 ## Deskripsi Aplikasi
-Sistem Penjualan Produk BeautyLand merupakan aplikasi berbasis web yang digunakan untuk membantu proses penjualan produk skincare secara lebih terstruktur. 
+Sistem Penjualan Produk BeautyLand merupakan aplikasi berbasis web yang digunakan untuk membantu proses penjualan produk kecantikan secara lebih terstruktur. 
 
 ## Cara Menjalankan
 
@@ -10,9 +10,9 @@ Sistem Penjualan Produk BeautyLand merupakan aplikasi berbasis web yang digunaka
 | Product Owner | Afni | Dhila |
 | Scrum Master | Wildan | Ilham |
 | UI/UX | Shella | Lathif &  Ma'wa |
-| Backend | Ilham | Wildan |
-| Frontend | Dhila | Ilham |
-| QA/Tester | Ma'wa | Wildan & Afni |
+| Backend | Ilham | Hisyam & Wildan |
+| Frontend | Dhila | Afni |
+| QA/Tester | Ma'wa | Hisyam |
 | Dokumentasi + Branding | Lathif | Shella |
 
 ## Definition of Done (DoD)
