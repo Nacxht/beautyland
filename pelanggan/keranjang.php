@@ -161,7 +161,7 @@ $data = mysqli_query($conn, "
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Keranjang Saya - MAARS Beauty</title>
+<title>Keranjang Saya - BeautyLand</title>
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
@@ -539,7 +539,7 @@ body{
         font-size:22px;
         margin-bottom:10px;
     ">
-        Keranjangmu masih kosong 😢
+        Keranjangmu masih kosong 
     </h3>
 
     <p style="margin-bottom:20px;">
