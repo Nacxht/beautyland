@@ -1,7 +1,5 @@
 <?php
-
-// Isi kredensial anda disini
-$conn = new mysqli("localhost", "root", "", "beauty_care");
+$conn = new mysqli("localhost", "root", "", "beautyland");
 
 if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);

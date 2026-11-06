@@ -274,7 +274,7 @@ if (isset($_POST['login'])) {
   </div>
 
   <div class="form-header">
-    <h2>Selamat Datang 👋</h2>
+    <h2>Selamat Datang</h2>
     <p>Masuk untuk melanjutkan ke akunmu</p>
   </div>
 
