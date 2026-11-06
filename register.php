@@ -36,7 +36,7 @@ if (isset($_POST['daftar'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daftar — MAARS Beauty</title>
+  <title>Daftar — BeautyLand</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -314,7 +314,7 @@ if (isset($_POST['daftar'])) {
 
   <div class="brand">
     <div class="brand-dot"></div>
-    <span class="brand-name">MAARS Beauty</span>
+    <span class="brand-name">BeautyLand</span>
   </div>
 
   <div class="form-header">
@@ -350,7 +350,7 @@ if (isset($_POST['daftar'])) {
         <label>No. WhatsApp</label>
         <div class="input-wrap">
           <span class="input-icon">📱</span>
-          <input type="text" name="no_hp" placeholder="0812xxxx" required>
+          <input type="text" name="no_hp" placeholder="0812xxxxxxxx" required>
         </div>
       </div>
 
@@ -366,7 +366,7 @@ if (isset($_POST['daftar'])) {
         <label>Password</label>
         <div class="input-wrap">
           <span class="input-icon">🔒</span>
-          <input type="password" name="password" id="password" placeholder="Min. 8 karakter" required>
+          <input type="password" name="password" id="password" placeholder="Minimal. 8 karakter" required>
         </div>
         <div class="strength-bar">
           <div class="strength-fill" id="strengthFill"></div>
