@@ -9,7 +9,6 @@ if (isset($_POST['login'])) {
     $query = mysqli_query($conn, "SELECT * FROM users WHERE email='$email'");
     $data  = mysqli_fetch_assoc($query);
 
-    // MENGGUNAKAN MD5 UNTUK PENCOCOKAN PASSWORD
     if ($data && $data['password'] === md5($password)) {
         $_SESSION['user']         = $data;
         $_SESSION['role']         = $data['role'];
@@ -87,8 +86,8 @@ if (isset($_POST['login'])) {
 
     .card {
       background: var(--white);
-      border-radius: 28px;
-      padding: 48px 44px;
+      border-radius: 18px;
+      padding: 48px 40px;
       width: 100%;
       max-width: 420px;
       position: relative;
@@ -110,6 +109,7 @@ if (isset($_POST['login'])) {
       width: 60px; height: 4px;
       background: linear-gradient(90deg, var(--rose), var(--pink-500));
       border-radius: 0 0 4px 4px;
+      display: none;
     }
 
     .brand {
@@ -128,6 +128,7 @@ if (isset($_POST['login'])) {
 
     .brand-name {
       font-family: 'Playfair Display', serif;
+      text-decoration: underline;
       font-size: 18px;
       color: var(--dark);
       letter-spacing: 2px;
@@ -136,7 +137,7 @@ if (isset($_POST['login'])) {
 
     .form-header {
       text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 15px;
     }
 
     .form-header h2 {
@@ -152,11 +153,12 @@ if (isset($_POST['login'])) {
     }
 
     .error-msg {
-      background: #fff0f3;
-      border: 1px solid #ffb3c6;
-      color: #c0143c;
-      padding: 11px 14px;
-      border-radius: 10px;
+      background: #ffe4e6;
+      border: none;
+      justify-content: center;    
+      color: #be123c;
+      padding: 10px 14px;
+      border-radius: 8px;
       font-size: 13px;
       margin-bottom: 18px;
       display: flex;
@@ -183,8 +185,10 @@ if (isset($_POST['login'])) {
 
     .input-wrap input {
       width: 100%;
-      padding: 13px 16px 13px 44px;
-      border: 1.5px solid #f0dde5;
+      /* padding: 13px 16px 13px 44px; */
+      padding: 13px 16px;
+      /* border: 1.5px solid #f0dde5; */
+      border: 1.5px solid #dfb4c7; 
       border-radius: 12px;
       font-family: 'DM Sans', sans-serif;
       font-size: 14px;
@@ -249,6 +253,34 @@ if (isset($_POST['login'])) {
       background: #f0dde5;
     }
 
+    .btn-back-floating {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.25s ease;
+    }
+
+    .btn-back-floating:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: var(--rose);
+      color: var(--pink-300);
+      transform: translateX(-3px);
+    }
+
     .footer-link {
       text-align: center;
       font-size: 13px;
@@ -266,20 +298,26 @@ if (isset($_POST['login'])) {
 </head>
 <body>
 
+<a href="index.php" class="btn-back-floating">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </svg>
+  <span>Kembali ke Beranda</span>
+</a>
+
 <div class="card">
 
   <div class="brand">
-    <div class="brand-dot"></div>
     <span class="brand-name">BeautyLand</span>
   </div>
 
   <div class="form-header">
     <h2>Selamat Datang</h2>
-    <p>Masuk untuk melanjutkan ke akunmu</p>
+    <p>Masuk ke akun untuk melanjutkan</p>
   </div>
 
   <?php if (isset($error)): ?>
-    <div class="error-msg">⚠️ <?= $error ?></div>
+    <div class="error-msg"><?= $error ?></div>
   <?php endif; ?>
 
   <form method="POST" action="">
@@ -287,16 +325,15 @@ if (isset($_POST['login'])) {
     <div class="input-group">
       <label>Email</label>
       <div class="input-wrap">
-        <span class="input-icon">✉️</span>
-        <input type="email" name="email" placeholder="nama@email.com" required>
+        <!-- <input type="email" name="email" placeholder="example@email.com" required> -->
+        <input type="email" name="email" placeholder="example@email.com" value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>" required>
       </div>
     </div>
 
     <div class="input-group">
       <label>Password</label>
       <div class="input-wrap">
-        <span class="input-icon">🔒</span>
-        <input type="password" name="password" placeholder="Password kamu" required>
+        <input type="password" name="password" placeholder="••••••••" required>
       </div>
     </div>
 
