@@ -2,7 +2,7 @@
 $current = basename($_SERVER['PHP_SELF']);
 ?>
 <div class="sidebar">
-  <h2>MAARS Beauty</h2>
+  <h2>BEAUTYLAND</h2>
   <ul class="menu">
     <li><a href="dashboard.php" <?= $current == 'dashboard.php' ? 'class="active"' : '' ?>>Dashboard</a></li>
     <li><a href="produk_user.php" <?= $current == 'produk_user.php' ? 'class="active"' : '' ?>>Produk</a></li>
