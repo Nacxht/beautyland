@@ -86,7 +86,7 @@ if (isset($_POST['login'])) {
 
     .card {
       background: var(--white);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 48px 40px;
       width: 100%;
       max-width: 420px;
