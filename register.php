@@ -3,36 +3,47 @@ session_start();
 include 'includes/conn.php';
 
 if (isset($_POST['daftar'])) {
-    $nama     = mysqli_real_escape_string($conn, $_POST['nama']);
-    $email    = mysqli_real_escape_string($conn, $_POST['email']);
-    $no_hp    = mysqli_real_escape_string($conn, $_POST['no_hp']);
-    $alamat   = mysqli_real_escape_string($conn, $_POST['alamat']);
-    
-    // MENGGUNAKAN MD5 UNTUK ENKRIPSI PASSWORD BARU
-    $password = md5($_POST['password']);
+  $nama     = trim($_POST['nama']);
+  $email    = trim($_POST['email']);
+  $no_hp    = trim($_POST['no_hp']);
+  $alamat   = trim($_POST['alamat']);
+  $password = $_POST['password'];
 
-    // Cek email duplikat
-    $cek = mysqli_query($conn, "SELECT id_user FROM users WHERE email='$email'");
-    if (mysqli_num_rows($cek) > 0) {
-        $error = "Email sudah terdaftar, gunakan email lain.";
+  if (empty($nama) || empty($email) || empty($no_hp) || empty($alamat) || empty($password)) {
+    $error = "Semua kolom wajib diisi!";
+  } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $error = "Format email tidak valid!";
+  } elseif (!preg_match('/^[0-9+]{10,15}$/', $no_hp)) {
+    $error = "Nomor WhatsApp harus berupa angka (10-15 digit)!";
+  } elseif (strlen($password) < 8) {
+    $error = "Password minimal harus 8 karakter!";
+  } else {
+    $stmt_cek = $conn->prepare("SELECT id_user FROM users WHERE email = ? LIMIT 1");
+    $stmt_cek->bind_param("s", $email);
+    $stmt_cek->execute();
+    $cek_result = $stmt_cek->get_result();
+
+    if ($cek_result->num_rows > 0) {
+      $error = "Email sudah terdaftar, silakan gunakan email lain atau login.";
     } else {
-        mysqli_query($conn, "INSERT INTO pelanggan 
-            (nama, email, no_hp, alamat, tanggal_daftar)
-            VALUES ('$nama','$email','$no_hp','$alamat', NOW())");
-
-        $id_pelanggan = mysqli_insert_id($conn);
-
-        mysqli_query($conn, "INSERT INTO users 
-            (id_pelanggan, email, password, role)
-            VALUES ('$id_pelanggan','$email','$password','pelanggan')");
-
-        header("Location: login.php?pesan=berhasil_daftar");
-        exit;
+      $password_hash = md5($password);
+      $stmt_pelanggan = $conn->prepare("INSERT INTO pelanggan (nama, email, no_hp, alamat, tanggal_daftar) VALUES (?, ?, ?, ?, NOW())");
+      $stmt_pelanggan->bind_param("ssss", $nama, $email, $no_hp, $alamat);
+      $stmt_pelanggan->execute();
+      $id_pelanggan = $conn->insert_id;
+      $role = 'pelanggan';
+      $stmt_user = $conn->prepare("INSERT INTO users (id_pelanggan, email, password, role) VALUES (?, ?, ?, ?)");
+      $stmt_user->bind_param("isss", $id_pelanggan, $email, $password_hash, $role);
+      $stmt_user->execute();
+      header("Location: login.php?pesan=berhasil_daftar");
+      exit;
     }
+  }
 }
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,16 +51,20 @@ if (isset($_POST['daftar'])) {
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --pink-50:  #fff0f5;
+      --pink-50: #fff0f5;
       --pink-300: #ffaace;
       --pink-500: #ff4f81;
-      --rose:     #ff7aa2;
-      --dark:     #1a0a12;
-      --muted:    #8a6070;
-      --white:    #ffffff;
+      --rose: #ff7aa2;
+      --dark: #1a0a12;
+      --muted: #8a6070;
+      --white: #ffffff;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       font-family: 'DM Sans', sans-serif;
@@ -66,9 +81,11 @@ if (isset($_POST['daftar'])) {
     body::before {
       content: '';
       position: fixed;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(255,79,129,0.15) 0%, transparent 70%);
-      top: -150px; left: -150px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 79, 129, 0.15) 0%, transparent 70%);
+      top: -150px;
+      left: -150px;
       border-radius: 50%;
       animation: pulse 7s ease-in-out infinite;
       pointer-events: none;
@@ -77,17 +94,28 @@ if (isset($_POST['daftar'])) {
     body::after {
       content: '';
       position: fixed;
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(255,122,162,0.1) 0%, transparent 70%);
-      bottom: -100px; right: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255, 122, 162, 0.1) 0%, transparent 70%);
+      bottom: -100px;
+      right: -100px;
       border-radius: 50%;
       animation: pulse 7s ease-in-out infinite 3.5s;
       pointer-events: none;
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50%       { transform: scale(1.15); opacity: 0.6; }
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.15);
+        opacity: 0.6;
+      }
     }
 
     .card {
@@ -98,23 +126,20 @@ if (isset($_POST['daftar'])) {
       max-width: 480px;
       position: relative;
       z-index: 1;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
       animation: fadeUp 0.5s ease both;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
 
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 60px; height: 4px;
-      background: linear-gradient(90deg, var(--rose), var(--pink-500));
-      border-radius: 0 0 4px 4px;
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .brand {
@@ -126,7 +151,8 @@ if (isset($_POST['daftar'])) {
     }
 
     .brand-dot {
-      width: 9px; height: 9px;
+      width: 9px;
+      height: 9px;
       background: var(--rose);
       border-radius: 50%;
     }
@@ -162,14 +188,30 @@ if (isset($_POST['daftar'])) {
       text-decoration: none;
     }
 
-    .form-header p a:hover { text-decoration: underline; }
+    .form-header p a:hover {
+      text-decoration: underline;
+    }
 
-    .error-msg {
+    /* .error-msg {
       background: #fff0f3;
       border: 1px solid #ffb3c6;
       color: #c0143c;
       padding: 11px 14px;
       border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    } */
+
+    .error-msg {
+      background: #ffe4e6;
+      border: none;
+      justify-content: center;
+      color: #be123c;
+      padding: 10px 14px;
+      border-radius: 8px;
       font-size: 13px;
       margin-bottom: 16px;
       display: flex;
@@ -208,8 +250,8 @@ if (isset($_POST['daftar'])) {
     .input-wrap input,
     .input-wrap textarea {
       width: 100%;
-      padding: 12px 14px 12px 42px;
-      border: 1.5px solid #f0dde5;
+      padding: 12px 16px;
+      border: 1.5px solid #dfb4c7;
       border-radius: 10px;
       font-family: 'DM Sans', sans-serif;
       font-size: 13px;
@@ -229,7 +271,7 @@ if (isset($_POST['daftar'])) {
     .input-wrap textarea:focus {
       border-color: var(--rose);
       background: var(--white);
-      box-shadow: 0 0 0 4px rgba(255,122,162,0.12);
+      box-shadow: 0 0 0 4px rgba(255, 122, 162, 0.12);
     }
 
     .input-icon {
@@ -242,7 +284,7 @@ if (isset($_POST['daftar'])) {
       pointer-events: none;
     }
 
-    .input-wrap textarea ~ .input-icon {
+    .input-wrap textarea~.input-icon {
       top: 13px;
       transform: none;
     }
@@ -276,15 +318,45 @@ if (isset($_POST['daftar'])) {
       cursor: pointer;
       margin-top: 6px;
       transition: 0.3s;
-      box-shadow: 0 8px 24px rgba(255,79,129,0.3);
+      box-shadow: 0 8px 24px rgba(255, 79, 129, 0.3);
     }
 
     .btn-submit:hover {
       transform: translateY(-2px);
-      box-shadow: 0 14px 32px rgba(255,79,129,0.4);
+      box-shadow: 0 14px 32px rgba(255, 79, 129, 0.4);
     }
 
-    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-back-floating {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.25s ease;
+    }
+
+    .btn-back-floating:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: var(--rose);
+      color: var(--pink-300);
+      transform: translateX(-3px);
+    }
 
     .footer-link {
       text-align: center;
@@ -299,110 +371,126 @@ if (isset($_POST['daftar'])) {
       text-decoration: none;
     }
 
-    .footer-link a:hover { text-decoration: underline; }
+    .footer-link a:hover {
+      text-decoration: underline;
+    }
 
     @media (max-width: 500px) {
-      .card { padding: 36px 24px; }
-      .form-grid { grid-template-columns: 1fr; }
-      .input-group.full { grid-column: 1; }
+      .card {
+        padding: 36px 24px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group.full {
+        grid-column: 1;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<div class="card">
+  <a href="index.php" class="btn-back-floating">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5M12 19l-7-7 7-7" />
+    </svg>
+    <span>Kembali ke Beranda</span>
+  </a>
 
-  <div class="brand">
-    <div class="brand-dot"></div>
-    <span class="brand-name">BeautyLand</span>
-  </div>
+  <div class="card">
 
-  <div class="form-header">
-    <h2>Buat Akun Baru ✨</h2>
-    <p>Sudah punya akun? <a href="login.php">Masuk di sini</a></p>
-  </div>
-
-  <?php if (isset($error)): ?>
-    <div class="error-msg">⚠️ <?= $error ?></div>
-  <?php endif; ?>
-
-  <form method="POST" action="register.php">
-
-    <div class="form-grid">
-
-      <div class="input-group full">
-        <label>Nama Lengkap</label>
-        <div class="input-wrap">
-          <span class="input-icon">👤</span>
-          <input type="text" name="nama" placeholder="Nama lengkap kamu" required>
-        </div>
-      </div>
-
-      <div class="input-group">
-        <label>Email</label>
-        <div class="input-wrap">
-          <span class="input-icon">✉️</span>
-          <input type="email" name="email" placeholder="nama@email.com" required>
-        </div>
-      </div>
-
-      <div class="input-group">
-        <label>No. WhatsApp</label>
-        <div class="input-wrap">
-          <span class="input-icon">📱</span>
-          <input type="text" name="no_hp" placeholder="0812xxxxxxxx" required>
-        </div>
-      </div>
-
-      <div class="input-group full">
-        <label>Alamat</label>
-        <div class="input-wrap">
-          <span class="input-icon">📍</span>
-          <textarea name="alamat" placeholder="Alamat lengkap kamu..." required></textarea>
-        </div>
-      </div>
-
-      <div class="input-group full">
-        <label>Password</label>
-        <div class="input-wrap">
-          <span class="input-icon">🔒</span>
-          <input type="password" name="password" id="password" placeholder="Minimal. 8 karakter" required>
-        </div>
-        <div class="strength-bar">
-          <div class="strength-fill" id="strengthFill"></div>
-        </div>
-      </div>
-
+    <div class="brand">
+      <span class="brand-name">BeautyLand</span>
     </div>
 
-    <button type="submit" name="daftar" class="btn-submit">Daftar Sekarang</button>
+    <div class="form-header">
+      <h2>Buat Akun Baru</h2>
+    </div>
 
-  </form>
+    <?php if (isset($error)): ?>
+      <div class="error-msg"><?= $error ?></div>
+    <?php endif; ?>
 
-  <div class="footer-link">
-    Sudah punya akun? <a href="login.php">Masuk di sini</a>
+    <form method="POST" action="register.php">
+
+      <div class="form-grid">
+
+        <div class="input-group full">
+          <label>Nama Lengkap</label>
+          <div class="input-wrap">
+            <!-- <input type="text" name="nama" placeholder="Nama lengkap kamu" required> -->
+            <input type="text" name="nama" placeholder="Nama lengkap" value="<?= isset($_POST['nama']) ? htmlspecialchars($_POST['nama']) : '' ?>" required>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Email</label>
+          <div class="input-wrap">
+            <!-- <input type="email" name="email" placeholder="nama@email.com" required> -->
+            <input type="email" name="email" placeholder="example@gmail.com" value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>" required>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>No. WhatsApp</label>
+          <div class="input-wrap">
+            <!-- <input type="text" name="no_hp" placeholder="0812xxxxxxxx" required> -->
+            <input type="text" name="no_hp" placeholder="0812xxxxxxxx" value="<?= isset($_POST['no_hp']) ? htmlspecialchars($_POST['no_hp']) : '' ?>" required>
+          </div>
+        </div>
+
+        <div class="input-group full">
+          <label>Alamat</label>
+          <div class="input-wrap">
+            <!-- <textarea name="alamat" placeholder="Alamat lengkap kamu..." required></textarea> -->
+            <textarea name="alamat" placeholder="Alamat lengkap..." required><?= isset($_POST['alamat']) ? htmlspecialchars($_POST['alamat']) : '' ?></textarea>
+          </div>
+        </div>
+
+        <div class="input-group full">
+          <label>Password</label>
+          <div class="input-wrap">
+            <input type="password" name="password" id="password" placeholder="Minimal. 8 karakter" required>
+          </div>
+          <div class="strength-bar">
+            <div class="strength-fill" id="strengthFill"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <button type="submit" name="daftar" class="btn-submit">Daftar Sekarang</button>
+
+    </form>
+
+    <div class="footer-link">
+      Sudah punya akun? <a href="login.php">Masuk</a>
+    </div>
+
   </div>
 
-</div>
+  <script>
+    const pwd = document.getElementById('password');
+    const fill = document.getElementById('strengthFill');
+    const colors = ['#ff4f81', '#ff7aa2', '#f9a825', '#2ecc71'];
+    const widths = ['25%', '50%', '75%', '100%'];
 
-<script>
-  const pwd  = document.getElementById('password');
-  const fill = document.getElementById('strengthFill');
-  const colors = ['#ff4f81', '#ff7aa2', '#f9a825', '#2ecc71'];
-  const widths  = ['25%', '50%', '75%', '100%'];
+    pwd.addEventListener('input', () => {
+      const v = pwd.value;
+      let s = 0;
+      if (v.length >= 8) s++;
+      if (/[A-Z]/.test(v)) s++;
+      if (/[0-9]/.test(v)) s++;
+      if (/[^A-Za-z0-9]/.test(v)) s++;
 
-  pwd.addEventListener('input', () => {
-    const v = pwd.value;
-    let s = 0;
-    if (v.length >= 8)        s++;
-    if (/[A-Z]/.test(v))      s++;
-    if (/[0-9]/.test(v))      s++;
-    if (/[^A-Za-z0-9]/.test(v)) s++;
-
-    fill.style.width      = s > 0 ? widths[s - 1] : '0%';
-    fill.style.background = s > 0 ? colors[s - 1] : 'transparent';
-  });
-</script>
+      fill.style.width = s > 0 ? widths[s - 1] : '0%';
+      fill.style.background = s > 0 ? colors[s - 1] : 'transparent';
+    });
+  </script>
 
 </body>
+
 </html>
