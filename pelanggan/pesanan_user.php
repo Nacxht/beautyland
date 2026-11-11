@@ -7,7 +7,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'pelanggan') {
     exit;
 }
 
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 $id_pelanggan = $_SESSION['id_pelanggan'];
 
 // Ambil riwayat pesanan pelanggan ini
@@ -60,7 +60,7 @@ $query = mysqli_query($conn, "SELECT * FROM transaksi WHERE id_pelanggan = '$id_
 </head>
 <body>
 
-  <?php include '../includes/sidebar_user.php'; ?>
+  <?php require_once __DIR__ . '/../includes/sidebar_user.php'; ?>
 
   <div class="main">
     <div class="topbar-modern">

@@ -7,7 +7,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 // Ambil ID produk dari URL
 $id = isset($_GET['id']) ? $_GET['id'] : 0;
@@ -120,7 +120,7 @@ if (isset($_POST['update'])) {
 </head>
 <body>
 
-  <?php include '../includes/sidebar_admin.php'; ?>
+  <?php require_once __DIR__ . '/../includes/sidebar_admin.php'; ?>
 
   <div class="main">
     <div class="topbar-modern">

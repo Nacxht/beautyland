@@ -7,7 +7,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 // Proses jika tombol simpan ditekan
 if (isset($_POST['simpan'])) {
@@ -198,7 +198,7 @@ if (isset($_POST['simpan'])) {
 </head>
 <body>
 
-  <?php include '../includes/sidebar_admin.php'; ?>
+  <?php require_once __DIR__ . '/../includes/sidebar_admin.php'; ?>
 
   <div class="main">
     

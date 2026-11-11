@@ -6,7 +6,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'pelanggan') {
     exit;
 }
 
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 // SEARCH PRODUK
 $search = $_GET['search'] ?? '';
@@ -193,7 +193,7 @@ if($search != ''){
 </head>
 
 <body>
-    <?php include '../includes/sidebar_user.php'; ?>
+    <?php require_once __DIR__ . '/../includes/sidebar_user.php'; ?>
 
     <div class="main">
         <div class="topbar-modern">

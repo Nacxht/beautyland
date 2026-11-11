@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'includes/conn.php';
+require_once __DIR__ . '/includes/conn.php';
 
 if (isset($_POST['daftar'])) {
   $nama     = trim($_POST['nama']);

@@ -4,7 +4,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php");
     exit;
 }
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 date_default_timezone_set('Asia/Jakarta');
 $waktu_sekarang_db = date('Y-m-d H:i:s');
@@ -177,7 +177,7 @@ $booking = mysqli_query($conn, "
     </style>
 </head>
 <body>
-    <?php include '../includes/sidebar_admin.php'; ?>
+    <?php require_once __DIR__ . '/../includes/sidebar_admin.php'; ?>
     <div class="main">
         <h1>Jadwal Konsultasi</h1>
 

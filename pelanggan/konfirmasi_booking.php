@@ -4,7 +4,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'pelanggan') {
     header("Location: ../login.php");
     exit;
 }
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 if (!isset($_GET['id'])) {
     header("Location: booking_konsul.php");
@@ -85,7 +85,7 @@ if (isset($_POST['aksi_batal'])) {
 </head>
 <body>
   
-  <?php include '../includes/sidebar_user.php'; ?>
+  <?php require_once __DIR__ . '/../includes/sidebar_user.php'; ?>
   
   <div class="main">
       <div class="invoice-card">

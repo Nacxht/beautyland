@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 // ======================================
 // UPDATE PENGIRIMAN
@@ -70,7 +70,7 @@ $data = mysqli_query($conn, "
 </head>
 <body>
 
-<?php include '../includes/sidebar_admin.php'; ?>
+<?php require_once __DIR__ . '/../includes/sidebar_admin.php'; ?>
 
 <div class="main">
     <div class="header">

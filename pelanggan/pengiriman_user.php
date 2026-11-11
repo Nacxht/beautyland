@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 if(
     !isset($_SESSION['user']) ||
@@ -176,7 +176,7 @@ body{
 
 <body>
 
-<?php include '../includes/sidebar_user.php'; ?>
+<?php require_once __DIR__ . '/../includes/sidebar_user.php'; ?>
 
 <div class="main">
 

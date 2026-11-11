@@ -10,7 +10,7 @@ if (
     exit;
 }
 
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 $id_pelanggan = $_SESSION['id_pelanggan'];
 
@@ -349,7 +349,7 @@ body{
 
 <body>
 
-<?php include '../includes/sidebar_user.php'; ?>
+<?php require_once __DIR__ . '/../includes/sidebar_user.php'; ?>
 
 <div class="main">
 

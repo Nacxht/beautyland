@@ -1,5 +1,5 @@
 <?php
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 // Handle cancel action: set status to 'Dibatalkan' and redirect to produk_user.php
 if (isset($_POST['action']) && $_POST['action'] === 'cancel') {
