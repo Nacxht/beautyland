@@ -266,7 +266,7 @@ $total_keranjang = mysqli_fetch_assoc($q_keranjang)['total'];
               <h5><?= $row['nama_produk']; ?></h5>
               <span>Rp <?= number_format($row['harga'], 0, ',', '.'); ?></span>
             </div>
-            <a href="produk_user.php" class="btn-buy">Lihat</a>
+            <a href="<?= BASE_URL ?>/pelanggan/produk_user.php" class="btn-buy">Lihat</a>
           </div>
           <?php endwhile; ?>
         </div>
@@ -276,7 +276,7 @@ $total_keranjang = mysqli_fetch_assoc($q_keranjang)['total'];
         <div class="promo-card">
           <h4>Butuh Konsultasi?</h4>
           <p>Tanyakan masalah kulitmu langsung pada ahlinya.</p>
-          <a href="booking_konsul.php" class="btn-white">Booking Sekarang</a>
+          <a href="<?= BASE_URL ?>/pelanggan/booking_konsul.php" class="btn-white">Booking Sekarang</a>
         </div>
       </div>
     </div>

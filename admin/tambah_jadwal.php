@@ -78,7 +78,7 @@ if(isset($_POST['simpan_jadwal'])){
     <input type="text" name="konsultan" placeholder="Nama Konsultan" class="input-field" required>
     
     <button type="submit" name="simpan_jadwal" class="btn-pink">Simpan Jadwal</button>
-    <a href="konsultasi.php" style="display:block; text-align:center; margin-top:20px; color:#ff4f81; text-decoration:none;">Batal</a>
+    <a href="<?= BASE_URL ?>/admin/konsultasi.php" style="display:block; text-align:center; margin-top:20px; color:#ff4f81; text-decoration:none;">Batal</a>
 </form>
     </div>
 </body>

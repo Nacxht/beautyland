@@ -312,7 +312,7 @@ body{
         <div class="content-card" style="grid-row: span 2;">
             <div class="card-header">
                 <h3>Pesanan Terbaru</h3>
-                <a href="pesanan.php">Lihat semua →</a>
+                <a href="<?= BASE_URL ?>/admin/pesanan.php">Lihat semua →</a>
             </div>
 
             <?php if(mysqli_num_rows($q_pesanan_baru) > 0): ?>
@@ -341,7 +341,7 @@ body{
 
             <div class="card-header">
                 <h3>Stok Menipis ⚠️</h3>
-                <a href="produk.php">Kelola →</a>
+                <a href="<?= BASE_URL ?>/admin/produk.php">Kelola →</a>
             </div>
 
             <?php if($ada_stok_menipis): ?>
@@ -373,7 +373,7 @@ body{
 
             <div class="card-header">
                 <h3>Konsultasi Hari Ini</h3>
-                <a href="konsultasi.php">Lihat →</a>
+                <a href="<?= BASE_URL ?>/admin/konsultasi.php">Lihat →</a>
             </div>
 
             <?php if($ada_jadwal): ?>

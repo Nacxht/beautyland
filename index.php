@@ -199,7 +199,7 @@ nav {
     </div>
 
     <div class="nav-links">
-        <a href="login.php" class="btn-login">Masuk</a>
+        <a href="<?= BASE_URL ?>/login.php" class="btn-login">Masuk</a>
     </div>
 </nav>
 

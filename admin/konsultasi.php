@@ -181,7 +181,7 @@ $booking = mysqli_query($conn, "
     <div class="main">
         <h1>Jadwal Konsultasi</h1>
 
-        <a href="tambah_jadwal.php" class="btn-pink" style="text-decoration: none; padding: 10px 20px;">+ Tambah Jadwal</a>
+        <a href="<?= BASE_URL ?>/admin/tambah_jadwal.php" class="btn-pink" style="text-decoration: none; padding: 10px 20px;">+ Tambah Jadwal</a>
 
         <div class="card-box">
             <div class="section-title">Jadwal Konsultasi Tersedia</div>
@@ -217,7 +217,7 @@ $booking = mysqli_query($conn, "
                         </td>
                         <td>
                             <?php if($j['keterangan'] !== 'Selesai'): ?>
-                                <a href="edit_jadwal.php?id=<?= $j['id_jadwal']; ?>" class="btn-edit" >Edit</a>
+                                <a href="<?= BASE_URL ?>/admin/edit_jadwal.php?id=<?= $j['id_jadwal']; ?>" class="btn-edit" >Edit</a>
                             <?php else: ?>
                                 <span style="color:#aaa; font-size:11px;">Terkunci</span>
                             <?php endif; ?>
@@ -260,7 +260,7 @@ $booking = mysqli_query($conn, "
                             </td>
                             <td>
                                 <?php if($b['status'] != 'Selesai'): ?>
-                                    <a href="?selesai=<?= $b['id_booking']; ?>" class="btn-pink">Tandai Selesai</a>
+                                    <a href="<?= BASE_URL ?>/admin/konsultasi.php?selesai=<?= $b['id_booking']; ?>" class="btn-pink">Tandai Selesai</a>
                                 <?php else: ?>
                                     <span style="color:green; font-weight:bold;">Selesai</span>
                                 <?php endif; ?>

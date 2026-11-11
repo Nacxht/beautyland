@@ -298,7 +298,7 @@ if (isset($_POST['login'])) {
 </head>
 <body>
 
-<a href="index.php" class="btn-back-floating">
+<a href="<?= BASE_URL ?>/index.php" class="btn-back-floating">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M19 12H5M12 19l-7-7 7-7"/>
   </svg>
@@ -345,7 +345,7 @@ if (isset($_POST['login'])) {
   <div class="divider">atau</div>
 
   <div class="footer-link">
-    Belum punya akun? <a href="register.php">Daftar di sini</a>
+    Belum punya akun? <a href="<?= BASE_URL ?>/register.php">Daftar di sini</a>
   </div>
 
 </div>

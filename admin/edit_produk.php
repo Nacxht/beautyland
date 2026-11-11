@@ -170,7 +170,7 @@ if (isset($_POST['update'])) {
         </div>
 
         <button type="submit" name="update" class="btn-submit">Simpan Perubahan</button>
-        <a href="produk.php" class="btn-kembali">Batal</a>
+        <a href="<?= BASE_URL ?>/admin/produk.php" class="btn-kembali">Batal</a>
       </form>
     </div>
   </div>

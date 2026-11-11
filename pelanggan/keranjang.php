@@ -417,7 +417,7 @@ body{
             ">
 
                 <!-- MINUS -->
-                <a href="?kurang=<?= $row['id_keranjang']; ?>"
+                <a href="<?= BASE_URL ?>/pelanggan/keranjang.php?kurang=<?= $row['id_keranjang']; ?>"
                 style="
                 background:#ffe8ee;
                 color:#ff4f81;
@@ -443,7 +443,7 @@ body{
                 </span>
 
                 <!-- PLUS -->
-                <a href="?tambah=<?= $row['id_keranjang']; ?>"
+                <a href="<?= BASE_URL ?>/pelanggan/keranjang.php?tambah=<?= $row['id_keranjang']; ?>"
                 style="
                 background:#ff4f81;
                 color:white;
@@ -470,7 +470,7 @@ body{
 
             <!-- HAPUS -->
             <a
-                href="?hapus=<?= $row['id_keranjang']; ?>"
+                href="<?= BASE_URL ?>/pelanggan/keranjang.php?hapus=<?= $row['id_keranjang']; ?>"
                 class="btn-hapus"
             >
                 Hapus
@@ -546,7 +546,7 @@ body{
         Yuk lihat produk skincare favoritmu!
     </p>
 
-    <a href="produk_user.php"
+    <a href="<?= BASE_URL ?>/pelanggan/produk_user.php"
        style="
        background:#ff4f81;
        color:white;

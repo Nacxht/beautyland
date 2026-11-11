@@ -319,7 +319,7 @@ tbody tr:hover{
 
 
             <!-- BUTTON -->
-            <a href="tambah_produk.php" class="btn-add">
+            <a href="<?= BASE_URL ?>/admin/tambah_produk.php" class="btn-add">
 
                 + Tambah Baru
 
@@ -415,14 +415,14 @@ tbody tr:hover{
                     <td>
 
                         <a
-                            href="edit_produk.php?id=<?= $row['id_produk']; ?>"
+                            href="<?= BASE_URL ?>/admin/edit_produk.php?id=<?= $row['id_produk']; ?>"
                             class="btn-action btn-edit"
                         >
                             Edit
                         </a>
 
                         <a
-                            href="hapus_produk.php?id=<?= $row['id_produk']; ?>"
+                            href="<?= BASE_URL ?>/admin/hapus_produk.php?id=<?= $row['id_produk']; ?>"
                             class="btn-action btn-delete"
                             onclick="return confirm('Yakin ingin menghapus produk ini?')"
                         >

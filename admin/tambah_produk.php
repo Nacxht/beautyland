@@ -245,7 +245,7 @@ if (isset($_POST['simpan'])) {
         </div>
 
         <button type="submit" name="simpan" class="btn-submit">Simpan Produk</button>
-        <a href="produk.php" class="btn-kembali">Batal</a>
+        <a href="<?= BASE_URL ?>/admin/produk.php" class="btn-kembali">Batal</a>
 
       </form>
     </div>

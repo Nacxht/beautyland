@@ -445,7 +445,7 @@ tbody tr:hover{
 
                         echo "
                         <a 
-                            href='?verifikasi={$row['id_transaksi']}'
+                            href='" . BASE_URL . "/admin/pesanan.php?verifikasi={$row['id_transaksi']}'
                             class='btn-detail'
                         >
                             Verifikasi

@@ -128,7 +128,7 @@ if (isset($_POST['aksi_batal'])) {
               <div class="action-buttons">
                   <?php if ($data['status'] == 'Menunggu') { ?>
                       <button type="button" onclick="window.print()" class="btn btn-oke">🖨️ Cetak Bukti</button>
-                      <a href="riwayat_konsul.php" class="btn btn-batal">Kembali ke Riwayat</a>
+                      <a href="<?= BASE_URL ?>/pelanggan/riwayat_konsul.php" class="btn btn-batal">Kembali ke Riwayat</a>
                   <?php } else { ?>
                       <div class="row-buttons">
                           <button type="submit" name="aksi_batal" class="btn btn-batal">Batal</button>

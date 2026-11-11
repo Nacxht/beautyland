@@ -141,7 +141,7 @@ $query = mysqli_query($conn, "SELECT * FROM transaksi WHERE id_pelanggan = '$id_
               echo "</tr>";
           }
           } else {
-            echo "<tr><td colspan='5' style='text-align:center; padding:40px; color:#888;'>Kamu belum pernah melakukan pesanan. <br><br> <a href='produk_user.php' style='color:#ff4f81; text-decoration:none; font-weight:600;'>Mulai Belanja</a></td></tr>";
+            echo "<tr><td colspan='5' style='text-align:center; padding:40px; color:#888;'>Kamu belum pernah melakukan pesanan. <br><br> <a href='" . BASE_URL . "/pelanggan/produk_user.php' style='color:#ff4f81; text-decoration:none; font-weight:600;'>Mulai Belanja</a></td></tr>";
           }
           ?>
         </tbody>
