@@ -7,7 +7,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 
 // ======================================
@@ -45,8 +45,8 @@ if($search != ''){
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/sidebar.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
 
 <style>
 
@@ -282,7 +282,7 @@ tbody tr:hover{
 
 <body>
 
-<?php include '../includes/sidebar_admin.php'; ?>
+<?php require_once __DIR__ . '/../includes/sidebar_admin.php'; ?>
 
 <div class="main">
 
@@ -319,7 +319,7 @@ tbody tr:hover{
 
 
             <!-- BUTTON -->
-            <a href="tambah_produk.php" class="btn-add">
+            <a href="<?= BASE_URL ?>/admin/tambah_produk.php" class="btn-add">
 
                 + Tambah Baru
 
@@ -379,7 +379,7 @@ tbody tr:hover{
                     <td>
 
                         <img
-                            src="../assets/gambar/<?= $row['gambar']; ?>"
+                            src="<?= BASE_URL ?>/assets/gambar/<?= $row['gambar']; ?>"
                             class="product-img"
                         >
 
@@ -415,14 +415,14 @@ tbody tr:hover{
                     <td>
 
                         <a
-                            href="edit_produk.php?id=<?= $row['id_produk']; ?>"
+                            href="<?= BASE_URL ?>/admin/edit_produk.php?id=<?= $row['id_produk']; ?>"
                             class="btn-action btn-edit"
                         >
                             Edit
                         </a>
 
                         <a
-                            href="hapus_produk.php?id=<?= $row['id_produk']; ?>"
+                            href="<?= BASE_URL ?>/admin/hapus_produk.php?id=<?= $row['id_produk']; ?>"
                             class="btn-action btn-delete"
                             onclick="return confirm('Yakin ingin menghapus produk ini?')"
                         >

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'includes/conn.php';
+require_once __DIR__ . '/includes/conn.php';
 ?>
 
 <!DOCTYPE html>
@@ -199,7 +199,7 @@ nav {
     </div>
 
     <div class="nav-links">
-        <a href="login.php" class="btn-login">Masuk</a>
+        <a href="<?= BASE_URL ?>/login.php" class="btn-login">Masuk</a>
     </div>
 </nav>
 
@@ -211,9 +211,9 @@ nav {
     </div>
 
     <div class="hero-image-container">
-        <img src="assets/gambar/scincare.jpeg" class="slide active">
-        <img src="assets/gambar/g2g.jpg" class="slide">
-        <img src="assets/gambar/wardah.png" class="slide">
+        <img src="<?= BASE_URL ?>/assets/gambar/scincare.jpeg" class="slide active">
+        <img src="<?= BASE_URL ?>/assets/gambar/g2g.jpg" class="slide">
+        <img src="<?= BASE_URL ?>/assets/gambar/wardah.png" class="slide">
 
         <div class="dots">
             <span class="dot active" onclick="manualSlide(0)"></span>
@@ -227,25 +227,25 @@ nav {
 <section class="features">
 
     <div class="card">
-        <img src="assets/gambar/wardah2.png">
+        <img src="<?= BASE_URL ?>/assets/gambar/wardah2.png">
         <h3>Wardah</h3>
         <p>Produk skincare halal dengan kualitas terbaik untuk perawatan wajah.</p>
     </div>
 
     <div class="card">
-        <img src="assets/gambar/skintific2.png">
+        <img src="<?= BASE_URL ?>/assets/gambar/skintific2.png">
         <h3>Skintific</h3>
         <p>Skincare modern dengan teknologi untuk memperbaiki skin barrier.</p>
     </div>
 
     <div class="card">
-        <img src="assets/gambar/g2g1.png">
+        <img src="<?= BASE_URL ?>/assets/gambar/g2g1.png">
         <h3>Glad2Glow</h3>
         <p>skincare viral asal China yang diformulasikan untuk kulit remaja dan pemula</p>
     </div>
 
     <div class="card">
-        <img src="assets/gambar/b-erl.png">
+        <img src="<?= BASE_URL ?>/assets/gambar/b-erl.png">
         <h3>B ERL</h3>
         <p>Produk pencerah serta perawatan kulit aman, halal, dan BPOM.</p>
     </div>

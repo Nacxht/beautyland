@@ -7,7 +7,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 // Proses jika tombol simpan ditekan
 if (isset($_POST['simpan'])) {
@@ -58,8 +58,8 @@ if (isset($_POST['simpan'])) {
   <title>Tambah Produk - MAARS Beauty</title>
   
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/global.css">
-  <link rel="stylesheet" href="../assets/css/sidebar.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
 
   <style>
     body {
@@ -198,7 +198,7 @@ if (isset($_POST['simpan'])) {
 </head>
 <body>
 
-  <?php include '../includes/sidebar_admin.php'; ?>
+  <?php require_once __DIR__ . '/../includes/sidebar_admin.php'; ?>
 
   <div class="main">
     
@@ -245,7 +245,7 @@ if (isset($_POST['simpan'])) {
         </div>
 
         <button type="submit" name="simpan" class="btn-submit">Simpan Produk</button>
-        <a href="produk.php" class="btn-kembali">Batal</a>
+        <a href="<?= BASE_URL ?>/admin/produk.php" class="btn-kembali">Batal</a>
 
       </form>
     </div>

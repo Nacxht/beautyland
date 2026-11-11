@@ -6,7 +6,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'pelanggan') {
     exit;
 }
 
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 $id_pelanggan = $_SESSION['id_pelanggan'];
 
 // Ambil data riwayat booking milik pelanggan yang sedang login beserta data jadwalnya
@@ -26,8 +26,8 @@ $query = mysqli_query($conn, "
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riwayat Konsultasi - MAARS Beauty</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/global.css">
-    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
     <style>
         body { font-family: 'DM Sans', sans-serif; background: #fbf6f8; display: flex; margin: 0; }
         .main { flex: 1; padding: 40px; height: 100vh; overflow-y: auto; box-sizing: border-box; }
@@ -48,7 +48,7 @@ $query = mysqli_query($conn, "
 </head>
 <body>
 
-<?php include '../includes/sidebar_user.php'; ?>
+<?php require_once __DIR__ . '/../includes/sidebar_user.php'; ?>
 
 <div class="main">
     <div class="header-text">

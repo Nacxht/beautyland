@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 if(
     !isset($_SESSION['user']) ||
@@ -44,8 +44,8 @@ $data = mysqli_query($conn, "
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/sidebar.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
 
 <style>
 
@@ -176,7 +176,7 @@ body{
 
 <body>
 
-<?php include '../includes/sidebar_user.php'; ?>
+<?php require_once __DIR__ . '/../includes/sidebar_user.php'; ?>
 
 <div class="main">
 

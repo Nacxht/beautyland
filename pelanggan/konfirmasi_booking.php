@@ -4,7 +4,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'pelanggan') {
     header("Location: ../login.php");
     exit;
 }
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 if (!isset($_GET['id'])) {
     header("Location: booking_konsul.php");
@@ -50,8 +50,8 @@ if (isset($_POST['aksi_batal'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Konfirmasi Antrean Booking</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/global.css">
-    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
     <style>
         body { font-family: 'DM Sans', sans-serif; background-color: #fbf6f8; display: flex; margin: 0; }
         .main { flex: 1; padding: 40px; height: 100vh; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
@@ -85,7 +85,7 @@ if (isset($_POST['aksi_batal'])) {
 </head>
 <body>
   
-  <?php include '../includes/sidebar_user.php'; ?>
+  <?php require_once __DIR__ . '/../includes/sidebar_user.php'; ?>
   
   <div class="main">
       <div class="invoice-card">
@@ -128,7 +128,7 @@ if (isset($_POST['aksi_batal'])) {
               <div class="action-buttons">
                   <?php if ($data['status'] == 'Menunggu') { ?>
                       <button type="button" onclick="window.print()" class="btn btn-oke">🖨️ Cetak Bukti</button>
-                      <a href="riwayat_konsul.php" class="btn btn-batal">Kembali ke Riwayat</a>
+                      <a href="<?= BASE_URL ?>/pelanggan/riwayat_konsul.php" class="btn btn-batal">Kembali ke Riwayat</a>
                   <?php } else { ?>
                       <div class="row-buttons">
                           <button type="submit" name="aksi_batal" class="btn btn-batal">Batal</button>

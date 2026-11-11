@@ -4,7 +4,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php");
     exit;
 }
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 date_default_timezone_set('Asia/Jakarta');
 $waktu_sekarang_db = date('Y-m-d H:i:s');
@@ -49,8 +49,8 @@ $booking = mysqli_query($conn, "
     <meta charset="UTF-8">
     <title>Konsultasi Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/global.css">
-    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
     <style>
         body { 
             font-family: 'DM Sans', sans-serif; 
@@ -177,11 +177,11 @@ $booking = mysqli_query($conn, "
     </style>
 </head>
 <body>
-    <?php include '../includes/sidebar_admin.php'; ?>
+    <?php require_once __DIR__ . '/../includes/sidebar_admin.php'; ?>
     <div class="main">
         <h1>Jadwal Konsultasi</h1>
 
-        <a href="tambah_jadwal.php" class="btn-pink" style="text-decoration: none; padding: 10px 20px;">+ Tambah Jadwal</a>
+        <a href="<?= BASE_URL ?>/admin/tambah_jadwal.php" class="btn-pink" style="text-decoration: none; padding: 10px 20px;">+ Tambah Jadwal</a>
 
         <div class="card-box">
             <div class="section-title">Jadwal Konsultasi Tersedia</div>
@@ -217,7 +217,7 @@ $booking = mysqli_query($conn, "
                         </td>
                         <td>
                             <?php if($j['keterangan'] !== 'Selesai'): ?>
-                                <a href="edit_jadwal.php?id=<?= $j['id_jadwal']; ?>" class="btn-edit" >Edit</a>
+                                <a href="<?= BASE_URL ?>/admin/edit_jadwal.php?id=<?= $j['id_jadwal']; ?>" class="btn-edit" >Edit</a>
                             <?php else: ?>
                                 <span style="color:#aaa; font-size:11px;">Terkunci</span>
                             <?php endif; ?>
@@ -260,7 +260,7 @@ $booking = mysqli_query($conn, "
                             </td>
                             <td>
                                 <?php if($b['status'] != 'Selesai'): ?>
-                                    <a href="?selesai=<?= $b['id_booking']; ?>" class="btn-pink">Tandai Selesai</a>
+                                    <a href="<?= BASE_URL ?>/admin/konsultasi.php?selesai=<?= $b['id_booking']; ?>" class="btn-pink">Tandai Selesai</a>
                                 <?php else: ?>
                                     <span style="color:green; font-weight:bold;">Selesai</span>
                                 <?php endif; ?>

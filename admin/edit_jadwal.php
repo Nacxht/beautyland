@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'admin') { header("Location: ../login.php"); exit; }
 
 $id = $_GET['id'];
