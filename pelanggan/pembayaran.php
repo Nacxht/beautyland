@@ -2,14 +2,30 @@
 session_start();
 require_once __DIR__ . '/../includes/conn.php';
 
-$id = $_GET['id'];
+if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'pelanggan') {
+    header("Location: ../login.php");
+    exit;
+}
 
-$query = mysqli_query($conn, "
-    SELECT * FROM transaksi
-    WHERE id_transaksi='$id'
-");
-
-$data = mysqli_fetch_assoc($query);
+if (isset($_SESSION['pending_order'])) {
+    $total_harga = $_SESSION['pending_order']['total_harga'];
+    $kode_pembayaran = $_SESSION['pending_order']['kode_pembayaran'];
+    $id_transaksi = 0;
+} elseif (isset($_GET['id'])) {
+    $id = (int)$_GET['id'];
+    $query = mysqli_query($conn, "SELECT * FROM transaksi WHERE id_transaksi='$id'");
+    $data = mysqli_fetch_assoc($query);
+    if (!$data) {
+        header("Location: pesanan_user.php");
+        exit;
+    }
+    $total_harga = $data['total_harga'];
+    $kode_pembayaran = $data['kode_pembayaran'];
+    $id_transaksi = $data['id_transaksi'];
+} else {
+    header("Location: keranjang.php");
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -83,21 +99,18 @@ input[type=file]{
     <p><strong>Total:</strong></p>
 
     <h1>
-        Rp <?= number_format($data['total_harga'],0,',','.'); ?>
+        Rp <?= number_format($total_harga, 0, ',', '.'); ?>
     </h1>
 
     <p>Kode Pembayaran:</p>
 
     <div class="kode">
-        <?= $data['kode_pembayaran']; ?>
+        <?= htmlspecialchars($kode_pembayaran); ?>
     </div>
 
     <p>
         Silakan transfer sesuai total pembayaran.
     </p>
-
-    <!-- QRIS -->
-    
 
     <form action="proses_pembayaran.php" 
           method="POST" 
@@ -105,7 +118,7 @@ input[type=file]{
 
         <input type="hidden" 
                name="id_transaksi"
-               value="<?= $data['id_transaksi']; ?>">
+               value="<?= $id_transaksi; ?>">
 
         <label>Upload Bukti Pembayaran</label>
 
@@ -120,9 +133,8 @@ input[type=file]{
     </form>
 
     <form action="proses_pembayaran.php" method="POST" onsubmit="return confirm('Yakin membatalkan transaksi?');">
-        <input type="hidden" name="id_transaksi" value="<?= $data['id_transaksi']; ?>">
+        <input type="hidden" name="id_transaksi" value="<?= $id_transaksi; ?>">
         <input type="hidden" name="action" value="cancel">
-        <input type="hidden" name="referer" value="<?= isset($_GET['return']) ? htmlspecialchars($_GET['return'], ENT_QUOTES) : (isset($_SERVER['HTTP_REFERER']) ? htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES) : 'pesanan_user.php') ?>">
         <button type="submit" class="btn" style="background:#ff7aa3; margin-top:10px;">Batal</button>
     </form>
 </div>
