@@ -308,6 +308,7 @@ if (isset($_POST['login'])) {
 <div class="card">
 
   <div class="brand">
+    <div class="brand-dot"></div>
     <span class="brand-name">BeautyLand</span>
   </div>
 
