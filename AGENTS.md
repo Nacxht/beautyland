@@ -4,9 +4,17 @@
 
 Vanilla PHP 8.1 + MySQL 8.0 (mysqli). No framework, no Composer, no build step, no JS bundler. Served via XAMPP/WAMP/LAMP.
 
+## Configuration
+
+- Credentials live in **`.env`** (gitignored). Template: `.env.example`.
+- `includes/config.php` parses `.env` and defines constants: `HOSTNAME`, `DBNAME`, `USERNAME`, `PASSWORD`, `BASE_URL`.
+- `includes/conn.php` requires `config.php` and creates `$conn` (mysqli) using those constants.
+- To set up: `cp .env.example .env` then edit values.
+
 ## Database
 
-- **Connection** (`includes/conn.php`): `localhost`, user `root`, no password, database **`beautyland`**
+- **Connection**: configured via `.env` → `includes/config.php` → `includes/conn.php`
+- Default: `localhost`, user `root`, no password, database **`beautyland`**
 - Schema dump: `beauty_care (1).sql` (note: the dump header says `beauty_care` but the app connects to `beautyland` — create the DB as `beautyland`)
 - Import: `mysql -u root -e "CREATE DATABASE IF NOT EXISTS beautyland" && mysql -u root beautyland < "beauty_care (1).sql"`
 - Tables: `users`, `pelanggan`, `produk`, `transaksi`, `detail_transaksi`, `pengiriman`, `booking`, `jadwal` (and others in the dump)
@@ -17,7 +25,7 @@ Vanilla PHP 8.1 + MySQL 8.0 (mysqli). No framework, no Composer, no build step, 
 index.php, login.php, register.php, logout.php   # Public entry points
 admin/            # Admin panel (dashboard, products, orders, shipping, consultations, reports)
 pelanggan/        # Customer panel (cart, checkout, payment, orders, consultations, profile)
-includes/         # Shared: conn.php (DB), sidebar_admin.php, sidebar_user.php
+includes/         # Shared: config.php (env), conn.php (DB), sidebar_admin.php, sidebar_user.php
 assets/css/       # global.css, sidebar.css
 assets/gambar/    # Product images (uploaded)
 assets/bukti/     # Payment proof uploads
@@ -41,7 +49,9 @@ assets/bukti/     # Payment proof uploads
 - Fonts: Playfair Display, DM Sans via Google Fonts CDN.
 - File naming: snake_case, Indonesian words (e.g. `tambah_produk.php`, `keranjang.php`).
 - Form-processing endpoints are prefixed `proses_` (e.g. `proses_checkout.php`).
-- Includes use relative paths: `include '../includes/conn.php'` from subdirectories.
+- All includes use `require_once __DIR__ . '/...'` — always use this pattern for new files.
+- All asset URLs (CSS, images in HTML `<link>` / `<img>`) must use `<?= BASE_URL ?>/assets/...` (defined in `config.php`). Local filesystem operations (`move_uploaded_file`, `file_exists`, `unlink`) continue using relative paths (`../assets/...`).
+- All navigation links (`<a href="...">`) must use `<?= BASE_URL ?>/...` (e.g. `<?= BASE_URL ?>/admin/produk.php`, `<?= BASE_URL ?>/login.php`).
 
 ## No tooling
 
