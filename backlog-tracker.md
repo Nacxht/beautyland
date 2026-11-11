@@ -220,8 +220,8 @@ Sebagai pelanggan, saya ingin melakukan pemesanan produk, agar dapat membeli pro
 
 **Acceptance Criteria**
 - [x] Pelanggan dapat melakukan checkout dari keranjang
-- [ ] Sistem menampilkan detail dan total harga pesanan
-- [ ] Data pesanan tersimpan setelah pelanggan melakukan pembayaran.
+- [x] Sistem menampilkan detail dan total harga pesanan
+- [x] Data pesanan tersimpan setelah pelanggan melakukan pembayaran.
 
 **Definition of Done**
 - [ ] Semua acceptance criteria terpenuhi
