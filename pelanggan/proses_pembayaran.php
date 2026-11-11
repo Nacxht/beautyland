@@ -76,7 +76,7 @@ if ($error === 0) {
 
             $status_pengiriman = 'Belum Diproses';
             $stmt_ship = $conn->prepare("INSERT INTO pengiriman (id_transaksi, alamat_tujuan, status_pengiriman) VALUES (?, ?, ?)");
-            $stmt_ship->bind_param("is", $id_transaksi, $alamat);
+            $stmt_ship->bind_param("iss", $id_transaksi, $alamat, $status_pengiriman);
             $stmt_ship->execute();
 
             $stmt_detail = $conn->prepare("INSERT INTO detail_transaksi (id_transaksi, id_produk, jumlah, harga_satuan, subtotal) VALUES (?, ?, ?, ?, ?)");
