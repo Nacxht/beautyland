@@ -143,11 +143,24 @@ if($search != ''){
             font-weight: 600;
         }
 
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
         .price {
             color: #ff4f81;
             font-weight: 700;
             font-size: 17px;
-            margin-bottom: 15px;
+            margin: 0;
+        }
+
+        .stock {
+            font-size: 13px;
+            color: #8a6070;
+            font-weight: 500;
         }
 
         /* Button */
@@ -213,7 +226,10 @@ if($search != ''){
                 <div class="product-card">
                     <img src="<?= BASE_URL ?>/assets/gambar/<?= $row['gambar']; ?>" alt="<?= $row['nama_produk']; ?>">
                     <h4><?= $row['nama_produk']; ?></h4>
-                    <p class="price">Rp <?= number_format($row['harga'], 0, ',', '.'); ?></p>
+                    <div class="product-meta">
+                        <p class="price">Rp <?= number_format($row['harga'], 0, ',', '.'); ?></p>
+                        <span class="stock">Stok: <?= $row['stok']; ?></span>
+                    </div>
 
                     <div class="action-buttons">
                         <?php if($row['stok'] > 0): ?>
