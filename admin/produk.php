@@ -45,8 +45,8 @@ if($search != ''){
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/sidebar.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
 
 <style>
 
@@ -379,7 +379,7 @@ tbody tr:hover{
                     <td>
 
                         <img
-                            src="../assets/gambar/<?= $row['gambar']; ?>"
+                            src="<?= BASE_URL ?>/assets/gambar/<?= $row['gambar']; ?>"
                             class="product-img"
                         >
 

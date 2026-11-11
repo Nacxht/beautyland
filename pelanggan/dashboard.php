@@ -56,8 +56,8 @@ $total_keranjang = mysqli_fetch_assoc($q_keranjang)['total'];
   <title>Dashboard Pelanggan - MAARS Beauty</title>
   
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/global.css">
-  <link rel="stylesheet" href="../assets/css/sidebar.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
 
   <style>
     body {
@@ -261,7 +261,7 @@ $total_keranjang = mysqli_fetch_assoc($q_keranjang)['total'];
           while($row = mysqli_fetch_assoc($q_produk)):
           ?>
           <div class="product-item">
-            <img src="../assets/gambar/<?= $row['gambar']; ?>" alt="produk">
+            <img src="<?= BASE_URL ?>/assets/gambar/<?= $row['gambar']; ?>" alt="produk">
             <div class="product-info">
               <h5><?= $row['nama_produk']; ?></h5>
               <span>Rp <?= number_format($row['harga'], 0, ',', '.'); ?></span>

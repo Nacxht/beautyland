@@ -49,8 +49,8 @@ $booking = mysqli_query($conn, "
     <meta charset="UTF-8">
     <title>Konsultasi Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/global.css">
-    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
     <style>
         body { 
             font-family: 'DM Sans', sans-serif; 

@@ -92,8 +92,8 @@ if (isset($_POST['update'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Produk - MAARS Beauty</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/global.css">
-  <link rel="stylesheet" href="../assets/css/sidebar.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
   <style>
     /* Styling identik dengan tambah_produk.php */
     body { font-family: 'DM Sans', sans-serif; background-color: #fbf6f8; display: flex; }
@@ -165,7 +165,7 @@ if (isset($_POST['update'])) {
             <input type="file" name="gambar" class="form-control" accept="image/png, image/jpeg, image/jpg">
             <br>
             <small style="color: #888;">Gambar saat ini:</small>
-            <img src="../assets/gambar/<?= $data['gambar']; ?>" class="img-preview" alt="Preview Gambar">
+            <img src="<?= BASE_URL ?>/assets/gambar/<?= $data['gambar']; ?>" class="img-preview" alt="Preview Gambar">
           </div>
         </div>
 

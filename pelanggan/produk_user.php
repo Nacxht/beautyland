@@ -34,8 +34,8 @@ if($search != ''){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Katalog Produk - BEAUTYLAND</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/global.css">
-    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
 
     <style>
         /* Reset & Dasar */
@@ -211,7 +211,7 @@ if($search != ''){
             <?php if(mysqli_num_rows($query) > 0): ?>
                 <?php while($row = mysqli_fetch_assoc($query)): ?>
                 <div class="product-card">
-                    <img src="../assets/gambar/<?= $row['gambar']; ?>" alt="<?= $row['nama_produk']; ?>">
+                    <img src="<?= BASE_URL ?>/assets/gambar/<?= $row['gambar']; ?>" alt="<?= $row['nama_produk']; ?>">
                     <h4><?= $row['nama_produk']; ?></h4>
                     <p class="price">Rp <?= number_format($row['harga'], 0, ',', '.'); ?></p>
 

@@ -101,8 +101,8 @@ foreach($items as $item){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - MAARS Beauty</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/global.css">
-    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
 
     <style>
         body{
@@ -445,7 +445,7 @@ foreach($items as $item){
                     <?php if(count($items) > 0): ?>
                         <?php foreach($items as $key => $item): ?>
                         <div class="product-item">
-                            <img src="../assets/gambar/<?= $item['gambar']; ?>" alt="<?= $item['nama_produk']; ?>">
+                            <img src="<?= BASE_URL ?>/assets/gambar/<?= $item['gambar']; ?>" alt="<?= $item['nama_produk']; ?>">
                             
                             <div class="product-info">
                                 <h4><?= $item['nama_produk']; ?></h4>

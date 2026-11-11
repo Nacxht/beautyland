@@ -50,8 +50,8 @@ if (isset($_POST['aksi_batal'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Konfirmasi Antrean Booking</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/global.css">
-    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
     <style>
         body { font-family: 'DM Sans', sans-serif; background-color: #fbf6f8; display: flex; margin: 0; }
         .main { flex: 1; padding: 40px; height: 100vh; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }

@@ -75,8 +75,8 @@ if($search != ''){
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/sidebar.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
 
 <style>
 
@@ -416,7 +416,7 @@ tbody tr:hover{
                     echo "<td>";
                     if(!empty($row['bukti_pembayaran'])){
                         // Path disesuaikan ke folder assets/bukti/
-                        $path_gambar = "../assets/bukti/" . $row['bukti_pembayaran']; 
+                        $path_gambar = BASE_URL . "/assets/bukti/" . $row['bukti_pembayaran']; 
                         echo "
                         <img 
                             src='{$path_gambar}' 

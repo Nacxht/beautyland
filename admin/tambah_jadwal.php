@@ -20,7 +20,7 @@ if(isset($_POST['simpan_jadwal'])){
 <head>
     <meta charset="UTF-8">
     <title>Tambah Jadwal</title>
-    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
     <style>
     body { 
         font-family: 'DM Sans', sans-serif; 
