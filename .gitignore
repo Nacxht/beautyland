@@ -27,3 +27,6 @@ Desktop.ini
 # Environment / secrets
 .env
 .env.*
+
+
+/includes/ongkir_config.local.php
