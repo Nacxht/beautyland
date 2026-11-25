@@ -7,7 +7,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'pelanggan') {
     exit;
 }
 
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 $id_pelanggan = $_SESSION['id_pelanggan'];
 
 // Ambil riwayat pesanan pelanggan ini
@@ -22,8 +22,8 @@ $query = mysqli_query($conn, "SELECT * FROM transaksi WHERE id_pelanggan = '$id_
   <title>Pesanan Saya - MAARS Beauty</title>
   
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/global.css">
-  <link rel="stylesheet" href="../assets/css/sidebar.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
 
   <style>
     body { font-family: 'DM Sans', sans-serif; background-color: #fbf6f8; display: flex; }
@@ -60,7 +60,7 @@ $query = mysqli_query($conn, "SELECT * FROM transaksi WHERE id_pelanggan = '$id_
 </head>
 <body>
 
-  <?php include '../includes/sidebar_user.php'; ?>
+  <?php require_once __DIR__ . '/../includes/sidebar_user.php'; ?>
 
   <div class="main">
     <div class="topbar-modern">
@@ -141,7 +141,7 @@ $query = mysqli_query($conn, "SELECT * FROM transaksi WHERE id_pelanggan = '$id_
               echo "</tr>";
           }
           } else {
-            echo "<tr><td colspan='5' style='text-align:center; padding:40px; color:#888;'>Kamu belum pernah melakukan pesanan. <br><br> <a href='produk_user.php' style='color:#ff4f81; text-decoration:none; font-weight:600;'>Mulai Belanja</a></td></tr>";
+            echo "<tr><td colspan='5' style='text-align:center; padding:40px; color:#888;'>Kamu belum pernah melakukan pesanan. <br><br> <a href='" . BASE_URL . "/pelanggan/produk_user.php' style='color:#ff4f81; text-decoration:none; font-weight:600;'>Mulai Belanja</a></td></tr>";
           }
           ?>
         </tbody>

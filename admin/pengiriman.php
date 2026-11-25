@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 // ======================================
 // UPDATE PENGIRIMAN
@@ -46,8 +46,8 @@ $data = mysqli_query($conn, "
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Pengiriman</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/global.css">
-    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
     <style>
         body{ font-family:'DM Sans',sans-serif; background:#fbf6f8; display:flex; }
         .main{ flex:1; padding:40px; height:100vh; overflow-y:auto; }
@@ -70,7 +70,7 @@ $data = mysqli_query($conn, "
 </head>
 <body>
 
-<?php include '../includes/sidebar_admin.php'; ?>
+<?php require_once __DIR__ . '/../includes/sidebar_admin.php'; ?>
 
 <div class="main">
     <div class="header">

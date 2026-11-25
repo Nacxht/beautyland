@@ -7,7 +7,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'pelanggan') {
     exit;
 }
 
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 $id_pelanggan = $_SESSION['id_pelanggan'];
 
@@ -56,8 +56,8 @@ $total_keranjang = mysqli_fetch_assoc($q_keranjang)['total'];
   <title>Dashboard Pelanggan - MAARS Beauty</title>
   
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/global.css">
-  <link rel="stylesheet" href="../assets/css/sidebar.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
 
   <style>
     body {
@@ -218,7 +218,7 @@ $total_keranjang = mysqli_fetch_assoc($q_keranjang)['total'];
 </head>
 <body>
 
-  <?php include '../includes/sidebar_user.php'; ?>
+  <?php require_once __DIR__ . '/../includes/sidebar_user.php'; ?>
 
   <div class="main">
     <div class="topbar-modern">
@@ -261,12 +261,12 @@ $total_keranjang = mysqli_fetch_assoc($q_keranjang)['total'];
           while($row = mysqli_fetch_assoc($q_produk)):
           ?>
           <div class="product-item">
-            <img src="../assets/gambar/<?= $row['gambar']; ?>" alt="produk">
+            <img src="<?= BASE_URL ?>/assets/gambar/<?= $row['gambar']; ?>" alt="produk">
             <div class="product-info">
               <h5><?= $row['nama_produk']; ?></h5>
               <span>Rp <?= number_format($row['harga'], 0, ',', '.'); ?></span>
             </div>
-            <a href="produk_user.php" class="btn-buy">Lihat</a>
+            <a href="<?= BASE_URL ?>/pelanggan/produk_user.php" class="btn-buy">Lihat</a>
           </div>
           <?php endwhile; ?>
         </div>
@@ -276,7 +276,7 @@ $total_keranjang = mysqli_fetch_assoc($q_keranjang)['total'];
         <div class="promo-card">
           <h4>Butuh Konsultasi?</h4>
           <p>Tanyakan masalah kulitmu langsung pada ahlinya.</p>
-          <a href="booking_konsul.php" class="btn-white">Booking Sekarang</a>
+          <a href="<?= BASE_URL ?>/pelanggan/booking_konsul.php" class="btn-white">Booking Sekarang</a>
         </div>
       </div>
     </div>

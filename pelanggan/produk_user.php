@@ -6,7 +6,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'pelanggan') {
     exit;
 }
 
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 // SEARCH PRODUK
 $search = $_GET['search'] ?? '';
@@ -34,8 +34,8 @@ if($search != ''){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Katalog Produk - BEAUTYLAND</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/global.css">
-    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
 
     <style>
         /* Reset & Dasar */
@@ -143,11 +143,24 @@ if($search != ''){
             font-weight: 600;
         }
 
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
         .price {
             color: #ff4f81;
             font-weight: 700;
             font-size: 17px;
-            margin-bottom: 15px;
+            margin: 0;
+        }
+
+        .stock {
+            font-size: 13px;
+            color: #8a6070;
+            font-weight: 500;
         }
 
         /* Button */
@@ -193,7 +206,7 @@ if($search != ''){
 </head>
 
 <body>
-    <?php include '../includes/sidebar_user.php'; ?>
+    <?php require_once __DIR__ . '/../includes/sidebar_user.php'; ?>
 
     <div class="main">
         <div class="topbar-modern">
@@ -211,9 +224,12 @@ if($search != ''){
             <?php if(mysqli_num_rows($query) > 0): ?>
                 <?php while($row = mysqli_fetch_assoc($query)): ?>
                 <div class="product-card">
-                    <img src="../assets/gambar/<?= $row['gambar']; ?>" alt="<?= $row['nama_produk']; ?>">
+                    <img src="<?= BASE_URL ?>/assets/gambar/<?= $row['gambar']; ?>" alt="<?= $row['nama_produk']; ?>">
                     <h4><?= $row['nama_produk']; ?></h4>
-                    <p class="price">Rp <?= number_format($row['harga'], 0, ',', '.'); ?></p>
+                    <div class="product-meta">
+                        <p class="price">Rp <?= number_format($row['harga'], 0, ',', '.'); ?></p>
+                        <span class="stock">Stok: <?= $row['stok']; ?></span>
+                    </div>
 
                     <div class="action-buttons">
                         <?php if($row['stok'] > 0): ?>

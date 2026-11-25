@@ -27,6 +27,7 @@ Desktop.ini
 # Environment / secrets
 .env
 .env.*
+!.env.example
 
-
+# RajaOngkir local configuration
 /includes/ongkir_config.local.php

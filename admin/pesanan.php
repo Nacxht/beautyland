@@ -6,7 +6,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 
 
@@ -75,8 +75,8 @@ if($search != ''){
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/sidebar.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
 
 <style>
 
@@ -317,7 +317,7 @@ tbody tr:hover{
 
 <body>
 
-<?php include '../includes/sidebar_admin.php'; ?>
+<?php require_once __DIR__ . '/../includes/sidebar_admin.php'; ?>
 
 <div class="main">
 
@@ -416,7 +416,7 @@ tbody tr:hover{
                     echo "<td>";
                     if(!empty($row['bukti_pembayaran'])){
                         // Path disesuaikan ke folder assets/bukti/
-                        $path_gambar = "../assets/bukti/" . $row['bukti_pembayaran']; 
+                        $path_gambar = BASE_URL . "/assets/bukti/" . $row['bukti_pembayaran']; 
                         echo "
                         <img 
                             src='{$path_gambar}' 
@@ -445,7 +445,7 @@ tbody tr:hover{
 
                         echo "
                         <a 
-                            href='?verifikasi={$row['id_transaksi']}'
+                            href='" . BASE_URL . "/admin/pesanan.php?verifikasi={$row['id_transaksi']}'
                             class='btn-detail'
                         >
                             Verifikasi

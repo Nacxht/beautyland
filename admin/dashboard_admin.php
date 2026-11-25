@@ -6,7 +6,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-include '../includes/conn.php';
+require_once __DIR__ . '/../includes/conn.php';
 
 // 1. Statistik Global
 
@@ -87,8 +87,8 @@ $ada_jadwal = $total_booking > 0;
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/sidebar.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/sidebar.css">
 
 <style>
 
@@ -269,7 +269,7 @@ body{
 
 <body>
 
-<?php include '../includes/sidebar_admin.php'; ?>
+<?php require_once __DIR__ . '/../includes/sidebar_admin.php'; ?>
 
 <div class="main">
 
@@ -312,7 +312,7 @@ body{
         <div class="content-card" style="grid-row: span 2;">
             <div class="card-header">
                 <h3>Pesanan Terbaru</h3>
-                <a href="pesanan.php">Lihat semua →</a>
+                <a href="<?= BASE_URL ?>/admin/pesanan.php">Lihat semua →</a>
             </div>
 
             <?php if(mysqli_num_rows($q_pesanan_baru) > 0): ?>
@@ -341,7 +341,7 @@ body{
 
             <div class="card-header">
                 <h3>Stok Menipis ⚠️</h3>
-                <a href="produk.php">Kelola →</a>
+                <a href="<?= BASE_URL ?>/admin/produk.php">Kelola →</a>
             </div>
 
             <?php if($ada_stok_menipis): ?>
@@ -373,7 +373,7 @@ body{
 
             <div class="card-header">
                 <h3>Konsultasi Hari Ini</h3>
-                <a href="konsultasi.php">Lihat →</a>
+                <a href="<?= BASE_URL ?>/admin/konsultasi.php">Lihat →</a>
             </div>
 
             <?php if($ada_jadwal): ?>
