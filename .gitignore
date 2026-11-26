@@ -22,8 +22,8 @@ vendor/
 # assets/gambar/*.jpg
 # assets/gambar/*.jpeg
 # assets/gambar/*.webp
-assets/gambar/profil/
-assets/bukti/
+# assets/gambar/profil/
+# assets/bukti/
 
 # Environment / secrets
 .env
