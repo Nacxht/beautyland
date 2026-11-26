@@ -75,16 +75,19 @@ $produk_terlaris = mysqli_query($conn, "
     SELECT 
         pr.nama_produk,
 
-        COALESCE(SUM(dt.jumlah), 0) as total_terjual,
+        COALESCE(SUM(CASE WHEN t.status_pembayaran = 'Lunas' THEN dt.jumlah ELSE 0 END), 0) as total_terjual,
 
         pr.stok as sisa_stok,
 
-        (pr.stok + COALESCE(SUM(dt.jumlah),0)) as stok_awal
+        (pr.stok + COALESCE(SUM(CASE WHEN t.status_pembayaran = 'Lunas' THEN dt.jumlah ELSE 0 END), 0)) as stok_awal
 
     FROM produk pr
 
     LEFT JOIN detail_transaksi dt
     ON pr.id_produk = dt.id_produk
+
+    LEFT JOIN transaksi t
+    ON dt.id_transaksi = t.id_transaksi
 
     GROUP BY pr.id_produk
 
@@ -300,6 +303,16 @@ td{
     color:#f39c12;
 }
 
+.batal{
+    background:#fef2f2;
+    color:#ef4444;
+}
+
+.refund{
+    background:#e0f2fe;
+    color:#0284c7;
+}
+
 /* ======================================================== */
 /* CSS KHUSUS PRINT & SAVE AS PDF                           */
 /* ======================================================== */
@@ -454,7 +467,16 @@ td{
             <?php
             mysqli_data_seek($data_transaksi, 0); // Reset pointer array data
             while($t = mysqli_fetch_assoc($data_transaksi)){
-                $badge = strtolower($t['status_pembayaran']) == 'lunas' ? 'lunas' : 'menunggu';
+                $st = strtolower((string)($t['status_pembayaran'] ?? ''));
+                if ($st === 'lunas') {
+                    $badge = 'lunas';
+                } elseif ($st === 'refund') {
+                    $badge = 'refund';
+                } elseif ($st === 'batal' || $st === 'dibatalkan') {
+                    $badge = 'batal';
+                } else {
+                    $badge = 'menunggu';
+                }
             ?>
                 <tr>
                     <td><strong>TRX-00<?= $t['id_transaksi']; ?></strong></td>

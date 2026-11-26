@@ -14,13 +14,17 @@ require_once __DIR__ . '/../includes/conn.php';
 
 if(isset($_GET['verifikasi'])){
 
-    $id = $_GET['verifikasi'];
+    $id = (int)$_GET['verifikasi'];
 
-    mysqli_query($conn, "
+    // Hanya izinkan verifikasi manual untuk transaksi non-Midtrans
+    $stmt_verif = $conn->prepare("
         UPDATE transaksi
         SET status_pembayaran='Lunas'
-        WHERE id_transaksi='$id'
+        WHERE id_transaksi = ? AND (metode_pembayaran != 'Midtrans' OR metode_pembayaran IS NULL)
     ");
+    $stmt_verif->bind_param("i", $id);
+    $stmt_verif->execute();
+    $stmt_verif->close();
 
     header("Location: pesanan.php");
     exit;
@@ -222,6 +226,11 @@ tbody tr:hover{
     color:#ef4444;
 }
 
+.status-refund{
+    background:#e0f2fe;
+    color:#0284c7;
+}
+
 .btn-detail{
     padding:8px 12px;
     border-radius:8px;
@@ -364,12 +373,14 @@ tbody tr:hover{
 
                 while($row = mysqli_fetch_assoc($query)){
 
-                    $status_pembayaran = strtolower($row['status_pembayaran']);
+                    $status_pembayaran = strtolower((string)($row['status_pembayaran'] ?? ''));
 
                     if($status_pembayaran == 'lunas'){
                         $badge_class = 'status-lunas';
                     }elseif($status_pembayaran == 'batal' || $status_pembayaran == 'dibatalkan'){
                         $badge_class = 'status-batal';
+                    }elseif($status_pembayaran == 'refund'){
+                        $badge_class = 'status-refund';
                     }else{
                         $badge_class = 'status-belum';
                     }
@@ -441,24 +452,48 @@ tbody tr:hover{
                     // AKSI
                     echo "<td>";
 
-                    if($status_pembayaran != 'lunas'){
-
-                        echo "
-                        <a 
-                            href='" . BASE_URL . "/admin/pesanan.php?verifikasi={$row['id_transaksi']}'
-                            class='btn-detail'
-                        >
-                            Verifikasi
-                        </a>
-                        ";
-
-                    }else{
+                    if($status_pembayaran == 'lunas'){
 
                         echo "
                         <span style='color:#2ecc71; font-weight:600; white-space:nowrap;'>
                             Sudah Lunas
                         </span>
                         ";
+
+                    }elseif($status_pembayaran == 'refund'){
+
+                        echo "
+                        <span style='color:#0284c7; font-weight:600; white-space:nowrap;'>
+                            Di-refund
+                        </span>
+                        ";
+
+                    }elseif($status_pembayaran == 'batal' || $status_pembayaran == 'dibatalkan'){
+
+                        echo "
+                        <span style='color:#ef4444; font-weight:600; white-space:nowrap;'>
+                            Dibatalkan
+                        </span>
+                        ";
+
+                    }else{
+
+                        if(($row['metode_pembayaran'] ?? '') === 'Midtrans'){
+                            echo "
+                            <span style='color:#e67e22; font-weight:600; white-space:nowrap;'>
+                                Otomatis (Midtrans)
+                            </span>
+                            ";
+                        }else{
+                            echo "
+                            <a 
+                                href='" . BASE_URL . "/admin/pesanan.php?verifikasi={$row['id_transaksi']}'
+                                class='btn-detail'
+                            >
+                                Verifikasi
+                            </a>
+                            ";
+                        }
                     }
 
                     echo "</td>";

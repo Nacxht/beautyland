@@ -1,29 +1,54 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'admin') {
+    header("Location: ../login.php");
+    exit;
+}
+
 require_once __DIR__ . '/../includes/conn.php';
 
-// ======================================
-// UPDATE PENGIRIMAN
-// ======================================
 if(isset($_POST['simpan'])){
-    $id_pengiriman      = $_POST['id_pengiriman'];
-    $jasa_kirim         = $_POST['jasa_kirim'];
-    $nomor_resi         = $_POST['nomor_resi'];
-    $status_pengiriman  = $_POST['status_pengiriman'];
+    $id_pengiriman      = (int)($_POST['id_pengiriman'] ?? 0);
+    $jasa_kirim         = trim((string)($_POST['jasa_kirim'] ?? ''));
+    $nomor_resi         = trim((string)($_POST['nomor_resi'] ?? ''));
+    $status_pengiriman  = trim((string)($_POST['status_pengiriman'] ?? ''));
 
-    // PROTEKSI: Cek status di database sebelum update
-    $cek_status = mysqli_query($conn, "SELECT status_pengiriman FROM pengiriman WHERE id_pengiriman = '$id_pengiriman'");
-    $data_cek = mysqli_fetch_assoc($cek_status);
+    $stmt_cek = $conn->prepare("
+        SELECT p.status_pengiriman, t.status_pembayaran 
+        FROM pengiriman p 
+        JOIN transaksi t ON p.id_transaksi = t.id_transaksi 
+        WHERE p.id_pengiriman = ?
+    ");
+    if ($stmt_cek) {
+        $stmt_cek->bind_param("i", $id_pengiriman);
+        $stmt_cek->execute();
+        $data_cek = $stmt_cek->get_result()->fetch_assoc();
+        $stmt_cek->close();
 
-    if ($data_cek['status_pengiriman'] !== 'Selesai') {
-        mysqli_query($conn, "
-            UPDATE pengiriman
-            SET jasa_kirim='$jasa_kirim',
-                nomor_resi='$nomor_resi',
-                status_pengiriman='$status_pengiriman',
-                tanggal_kirim=NOW()
-            WHERE id_pengiriman='$id_pengiriman'
-        ");
+        if ($data_cek) {
+            $pay_status = strtolower((string)($data_cek['status_pembayaran'] ?? ''));
+            if ($pay_status !== 'lunas') {
+                echo "<script>alert('Pengiriman hanya dapat diproses untuk pesanan yang telah lunas.'); window.location='pengiriman.php';</script>";
+                exit;
+            }
+
+            if ($data_cek['status_pengiriman'] !== 'Selesai') {
+                $stmt_up = $conn->prepare("
+                    UPDATE pengiriman
+                    SET jasa_kirim = ?,
+                        nomor_resi = ?,
+                        status_pengiriman = ?,
+                        tanggal_kirim = NOW()
+                    WHERE id_pengiriman = ?
+                ");
+                if ($stmt_up) {
+                    $stmt_up->bind_param("sssi", $jasa_kirim, $nomor_resi, $status_pengiriman, $id_pengiriman);
+                    $stmt_up->execute();
+                    $stmt_up->close();
+                }
+            }
+        }
     }
 
     header("Location: pengiriman.php");
@@ -31,7 +56,7 @@ if(isset($_POST['simpan'])){
 }
 
 $data = mysqli_query($conn, "
-    SELECT p.*, t.kode_pembayaran, t.total_harga, pl.nama
+    SELECT p.*, t.kode_pembayaran, t.total_harga, t.status_pembayaran, pl.nama
     FROM pengiriman p
     JOIN transaksi t ON p.id_transaksi = t.id_transaksi
     JOIN pelanggan pl ON t.id_pelanggan = pl.id_pelanggan
@@ -80,13 +105,22 @@ $data = mysqli_query($conn, "
 
     <?php if(mysqli_num_rows($data) > 0): ?>
         <?php while($row = mysqli_fetch_assoc($data)): 
-            $is_selesai = ($row['status_pengiriman'] == 'Selesai');
-            $resi_otomatis = !empty($row['nomor_resi']) ? $row['nomor_resi'] : 'MB-131' . str_pad($row['id_pengiriman'], 5, '0', STR_PAD_LEFT);
+            $is_selesai   = ($row['status_pengiriman'] == 'Selesai');
+            $pay_status   = strtolower((string)($row['status_pembayaran'] ?? ''));
+            $is_lunas     = ($pay_status === 'lunas');
+            $is_blocked   = !$is_lunas;
+            $is_disabled  = ($is_selesai || $is_blocked);
+            $resi_otomatis = !empty($row['nomor_resi']) ? $row['nomor_resi'] : 'MB-131' . str_pad((string)$row['id_pengiriman'], 5, '0', STR_PAD_LEFT);
         ?>
         <div class="card">
             <div class="card-top">
                 <div class="order-code">ORDER <?= $row['kode_pembayaran']; ?></div>
-                <div class="status-badge"><?= $row['status_pengiriman']; ?></div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <?php if ($is_blocked): ?>
+                        <span class="status-badge" style="background:#fee2e2; color:#dc2626;">Pesanan <?= htmlspecialchars((string)$row['status_pembayaran']); ?></span>
+                    <?php endif; ?>
+                    <div class="status-badge"><?= $row['status_pengiriman']; ?></div>
+                </div>
             </div>
 
             <div class="info-box">
@@ -100,7 +134,7 @@ $data = mysqli_query($conn, "
                 <div class="form-grid">
                     <div class="input-group">
                         <label>Jasa Kirim</label>
-                        <select name="jasa_kirim" <?= $is_selesai ? 'disabled' : 'required'; ?>>
+                        <select name="jasa_kirim" <?= $is_disabled ? 'disabled' : 'required'; ?>>
                             <option value="JNE" <?= $row['jasa_kirim'] == 'JNE' ? 'selected' : ''; ?>>JNE</option>
                             <option value="J&T" <?= $row['jasa_kirim'] == 'J&T' ? 'selected' : ''; ?>>J&T</option>
                             <option value="SiCepat" <?= $row['jasa_kirim'] == 'SiCepat' ? 'selected' : ''; ?>>SiCepat</option>
@@ -114,7 +148,7 @@ $data = mysqli_query($conn, "
 
                     <div class="input-group">
                         <label>Status Pengiriman</label>
-                        <select name="status_pengiriman" <?= $is_selesai ? 'disabled' : ''; ?>>
+                        <select name="status_pengiriman" <?= $is_disabled ? 'disabled' : ''; ?>>
                             <option value="Belum Diproses" <?= $row['status_pengiriman'] == 'Belum Diproses' ? 'selected' : ''; ?>>Belum Diproses</option>
                             <option value="Diproses" <?= $row['status_pengiriman'] == 'Diproses' ? 'selected' : ''; ?>>Diproses</option>
                             <option value="Dikirim" <?= $row['status_pengiriman'] == 'Dikirim' ? 'selected' : ''; ?>>Dikirim</option>
@@ -123,7 +157,9 @@ $data = mysqli_query($conn, "
                     </div>
                 </div>
                 
-                <?php if (!$is_selesai): ?>
+                <?php if ($is_blocked): ?>
+                    <button type="button" class="btn-simpan" style="background:#f3f4f6; color:#9ca3af; cursor:not-allowed;" disabled>Pesanan <?= htmlspecialchars((string)$row['status_pembayaran']); ?> (Pengiriman Dinonaktifkan)</button>
+                <?php elseif (!$is_selesai): ?>
                     <button type="submit" name="simpan" class="btn-simpan">Simpan Pengiriman</button>
                 <?php else: ?>
                     <button type="button" class="btn-simpan" style="background:#ccc; cursor:not-allowed;" disabled>Pesanan Sudah Selesai</button>

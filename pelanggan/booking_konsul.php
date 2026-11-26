@@ -7,12 +7,13 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'pelanggan') {
 }
 
 require_once __DIR__ . '/../includes/conn.php';
-$id_pelanggan = $_SESSION['id_pelanggan'];
-$durasi_per_sesi = 45; // Durasi tetap per orang
 
-// ==========================================
-// PROSES BOOKING
-// ==========================================
+$id_pelanggan = $_SESSION['id_pelanggan'];
+$durasi_per_sesi = 45;
+
+/**
+ * PROSES BOOKING
+ */
 if (isset($_POST['proses_booking'])) {
     if (isset($_POST['id_jadwal'])) {
         $id_jadwal = $_POST['id_jadwal'];
@@ -24,13 +25,13 @@ if (isset($_POST['proses_booking'])) {
         } else {
             // 2. Ambil data jadwal & hitung kuota otomatis (Durasi / 45)
             $q_j = mysqli_query($conn, "
-                SELECT *, TIMESTAMPDIFF(MINUTE, jam_mulai, jam_selesai) as total_durasi 
+                SELECT *, TIMESTAMPDIFF(MINUTE, jam_mulai, jam_selesai) as total_durasi
                 FROM jadwal WHERE id_jadwal='$id_jadwal'
             ");
             $j = mysqli_fetch_assoc($q_j);
-            
+
             $maksimal_slot = floor($j['total_durasi'] / $durasi_per_sesi);
-            
+
             // 3. Hitung jumlah antrean yang sudah terisi
             $q_antrean = mysqli_query($conn, "SELECT COUNT(*) as total FROM booking WHERE id_jadwal='$id_jadwal' AND status != 'Batal'");
             $d_antrean = mysqli_fetch_assoc($q_antrean);
@@ -42,10 +43,10 @@ if (isset($_POST['proses_booking'])) {
                 // 4. Hitung No Antrean dan Jam Estimasi
                 $no_antrean = $jumlah_terisi + 1;
                 $menit_tambahan = ($no_antrean - 1) * $durasi_per_sesi;
-                
+
                 $jam_mulai_user = date('H:i:s', strtotime("+$menit_tambahan minutes", strtotime($j['jam_mulai'])));
                 $jam_selesai_user = date('H:i:s', strtotime("+$durasi_per_sesi minutes", strtotime($jam_mulai_user)));
-                
+
                 $kode_booking = "MRS-" . strtoupper(substr(md5(time() . rand()), 0, 5));
                 $tanggal_booking = date('Y-m-d');
 
@@ -70,9 +71,9 @@ if (isset($_POST['proses_booking'])) {
 // AMBIL DATA JADWAL
 // ==========================================
 $q_jadwal = mysqli_query($conn, "
-    SELECT *, TIMESTAMPDIFF(MINUTE, jam_mulai, jam_selesai) as total_durasi 
-    FROM jadwal 
-    WHERE tanggal >= CURDATE() 
+    SELECT *, TIMESTAMPDIFF(MINUTE, jam_mulai, jam_selesai) as total_durasi
+    FROM jadwal
+    WHERE tanggal >= CURDATE()
     ORDER BY tanggal ASC, jam_mulai ASC
 ");
 ?>
@@ -136,7 +137,7 @@ tr:hover { background:#fcfcfc; }
                 if(mysqli_num_rows($q_jadwal) > 0){
                     while($row = mysqli_fetch_assoc($q_jadwal)){
                         $id_j = $row['id_jadwal'];
-                        
+
                         // Logika perhitungan kuota dinamis
                         $max = floor($row['total_durasi'] / $durasi_per_sesi);
                         $q_count = mysqli_query($conn, "SELECT COUNT(*) as total FROM booking WHERE id_jadwal='$id_j' AND status != 'Batal'");

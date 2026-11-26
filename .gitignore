@@ -13,6 +13,7 @@ Desktop.ini
 *~
 
 # PHP
+vendor/
 *.log
 *.cache
 
@@ -21,8 +22,8 @@ Desktop.ini
 # assets/gambar/*.jpg
 # assets/gambar/*.jpeg
 # assets/gambar/*.webp
-# assets/gambar/profil/
-# assets/bukti/
+assets/gambar/profil/
+assets/bukti/
 
 # Environment / secrets
 .env

@@ -56,6 +56,7 @@ $query = mysqli_query($conn, "SELECT * FROM transaksi WHERE id_pelanggan = '$id_
     .status-menunggu { background: #fff5e6; color: #f39c12; }
     .status-lunas { background: #eaffea; color: #2ecc71; }
     .status-batal { background: #fef2f2; color: #ef4444; }
+    .status-refund { background: #e0f2fe; color: #0284c7; }
   </style>
 </head>
 <body>
@@ -99,6 +100,10 @@ $query = mysqli_query($conn, "SELECT * FROM transaksi WHERE id_pelanggan = '$id_
               } elseif (strpos($status, 'batal') !== false) {
           
                   $badge = 'status-batal';
+          
+              } elseif (strpos($status, 'refund') !== false) {
+          
+                  $badge = 'status-refund';
           
               } else {
           

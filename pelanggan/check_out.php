@@ -8,15 +8,13 @@ if(!isset($_SESSION['id_pelanggan'])){
     exit;
 }
 
-$id_pelanggan = $_SESSION['id_pelanggan'];
+$id_pelanggan = (int)$_SESSION['id_pelanggan'];
 
-$user = mysqli_query($conn, "
-    SELECT *
-    FROM pelanggan
-    WHERE id_pelanggan='$id_pelanggan'
-");
-
-$data_user = mysqli_fetch_assoc($user);
+$stmt_user = $conn->prepare("SELECT * FROM pelanggan WHERE id_pelanggan = ?");
+$stmt_user->bind_param("i", $id_pelanggan);
+$stmt_user->execute();
+$data_user = $stmt_user->get_result()->fetch_assoc();
+$stmt_user->close();
 
 $items = [];
 $total_bayar = 0;
@@ -27,15 +25,13 @@ $total_bayar = 0;
 // ======================================
 if(isset($_POST['id_produk'])){
 
-    $id_produk = $_POST['id_produk'];
+    $id_produk = (int)$_POST['id_produk'];
 
-    $query = mysqli_query($conn, "
-        SELECT *
-        FROM produk
-        WHERE id_produk='$id_produk'
-    ");
-
-    $produk = mysqli_fetch_assoc($query);
+    $stmt_prod = $conn->prepare("SELECT * FROM produk WHERE id_produk = ?");
+    $stmt_prod->bind_param("i", $id_produk);
+    $stmt_prod->execute();
+    $produk = $stmt_prod->get_result()->fetch_assoc();
+    $stmt_prod->close();
 
     if(!$produk){
         die("Produk tidak ditemukan");
@@ -58,7 +54,8 @@ elseif(isset($_POST['pilih_produk'])){
 
     foreach($_POST['pilih_produk'] as $id_produk){
 
-        $query = mysqli_query($conn, "
+        $id_produk = (int)$id_produk;
+        $stmt_cart = $conn->prepare("
             SELECT
                 k.*,
                 p.nama_produk,
@@ -68,11 +65,13 @@ elseif(isset($_POST['pilih_produk'])){
             JOIN produk p
             ON k.id_produk = p.id_produk
             WHERE
-                k.id_pelanggan='$id_pelanggan'
-                AND k.id_produk='$id_produk'
+                k.id_pelanggan = ?
+                AND k.id_produk = ?
         ");
-
-        $row = mysqli_fetch_assoc($query);
+        $stmt_cart->bind_param("ii", $id_pelanggan, $id_produk);
+        $stmt_cart->execute();
+        $row = $stmt_cart->get_result()->fetch_assoc();
+        $stmt_cart->close();
 
         if($row){
             $items[] = $row;
@@ -337,7 +336,7 @@ foreach($items as $item){
             padding: 16px;
             border: none;
             border-radius: 16px;
-            background: #ff4f81; 
+            background: #ff4f81;
             color: white;
             font-size: 15px;
             font-weight: 700;
@@ -382,7 +381,7 @@ foreach($items as $item){
             let subtotal = jumlah * hargaItem;
 
             document.getElementById('subtotal'+index).innerHTML = 'Rp ' + formatRupiah(subtotal);
-            
+
             let subtotalCalcContainer = document.getElementById('calcRow'+index);
             subtotalCalcContainer.innerHTML = '<span>' + jumlah + 'x @ Rp ' + formatRupiah(hargaItem) + '</span> <b>Rp ' + formatRupiah(subtotal) + '</b>';
 
@@ -401,7 +400,6 @@ foreach($items as $item){
             }
 
             document.getElementById('grandTotal').innerHTML = 'Rp ' + formatRupiah(total);
-            document.getElementById('totalHargaInput').value = total;
             document.getElementById('totalItemCount').innerHTML = totalItem;
         }
 
@@ -446,10 +444,10 @@ foreach($items as $item){
                         <?php foreach($items as $key => $item): ?>
                         <div class="product-item">
                             <img src="<?= BASE_URL ?>/assets/gambar/<?= $item['gambar']; ?>" alt="<?= $item['nama_produk']; ?>">
-                            
+
                             <div class="product-info">
                                 <h4><?= $item['nama_produk']; ?></h4>
-                                
+
                                 <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
                                     <!-- MINUS -->
                                     <button type="button" onclick="kurangJumlah(<?= $key; ?>, <?= $item['harga']; ?>)" style="width:32px; height:32px; border:none; border-radius:8px; background:#ffe8ee; color:#ff4f81; font-size:18px; cursor:pointer; font-weight:bold;">-</button>
@@ -473,7 +471,6 @@ foreach($items as $item){
 
                         <!-- HIDDEN DATA PER ITEM -->
                         <input type="hidden" name="id_produk[]" value="<?= $item['id_produk']; ?>">
-                        <input type="hidden" name="harga_satuan[]" value="<?= $item['harga']; ?>">
                         <?php endforeach; ?>
 
                     <?php else: ?>
@@ -484,7 +481,7 @@ foreach($items as $item){
                 <!-- KOLOM KANAN: SATU BOX NOTA / STRUK INTEGRASI -->
                 <div class="nota-box">
                     <div class="nota-title">🧾 Struk Belanja Anda</div>
-                    
+
                     <!-- DATA PENERIMA -->
                     <div class="section-title">📍 Tujuan Pengiriman</div>
                     <div class="customer-details">
@@ -509,7 +506,7 @@ foreach($items as $item){
                                 <span class="nota-item-name"><?= $item['nama_produk']; ?></span>
                                 <span>Rp <?= number_format($item['harga'], 0, ',', '.'); ?></span>
                             </div>
-                            
+
                             <div class="nota-item-subtotal-calc" id="calcRow<?= $key; ?>">
                                 <span><?= $item['jumlah']; ?>x @ Rp <?= number_format($item['harga'], 0, ',', '.'); ?></span>
                                 <b>Rp <?= number_format($subtotal, 0, ',', '.'); ?></b>
@@ -543,7 +540,6 @@ foreach($items as $item){
 
                     <!-- HIDDEN SYSTEM DATA -->
                     <input type="hidden" name="metode_pembayaran" value="Transfer Bank">
-                    <input type="hidden" name="total_harga" id="totalHargaInput" value="<?= $total_bayar; ?>">
                     <input type="hidden" name="alamat" value="<?= $data_user['alamat']; ?>">
 
                     <!-- INFO BOX DAN TOMBOL CHECKOUT -->

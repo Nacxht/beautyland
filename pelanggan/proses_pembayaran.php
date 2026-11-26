@@ -1,6 +1,14 @@
 <?php
 session_start();
 require_once __DIR__ . '/../includes/conn.php';
+require_once __DIR__ . '/../includes/stock_reservation.php';
+
+if (!isset($_SESSION['id_pelanggan'])) {
+    header("Location: ../login.php");
+    exit;
+}
+
+$id_pelanggan = (int)$_SESSION['id_pelanggan'];
 
 if (isset($_POST['action']) && $_POST['action'] === 'cancel') {
     if (isset($_SESSION['pending_order'])) {
@@ -8,14 +16,63 @@ if (isset($_POST['action']) && $_POST['action'] === 'cancel') {
     }
     if (!empty($_POST['id_transaksi'])) {
         $id_cancel = (int)$_POST['id_transaksi'];
-        mysqli_query($conn, "UPDATE transaksi SET status_pembayaran='Dibatalkan' WHERE id_transaksi='$id_cancel'");
+        if ($id_cancel > 0) {
+            $conn->begin_transaction();
+            try {
+                $stmt_cek = $conn->prepare("
+                    SELECT id_transaksi, id_pelanggan, status_pembayaran, metode_pembayaran 
+                    FROM transaksi 
+                    WHERE id_transaksi = ? 
+                    FOR UPDATE
+                ");
+                if (!$stmt_cek) {
+                    throw new RuntimeException("Gagal menyiapkan kueri verifikasi transaksi.");
+                }
+                $stmt_cek->bind_param("i", $id_cancel);
+                $stmt_cek->execute();
+                $trx = $stmt_cek->get_result()->fetch_assoc();
+                $stmt_cek->close();
+
+                if (!$trx || (int)$trx['id_pelanggan'] !== $id_pelanggan) {
+                    $conn->rollback();
+                    header('Location: pesanan_user.php');
+                    exit;
+                }
+
+                $status_sekarang = (string)($trx['status_pembayaran'] ?? '');
+                if (in_array($status_sekarang, ['Lunas', 'Refund', 'Dibatalkan'], true)) {
+                    $conn->rollback();
+                    header('Location: pesanan_user.php');
+                    exit;
+                }
+
+                $rel = release_stock_reservation($conn, $id_cancel);
+                if (!$rel['success']) {
+                    throw new RuntimeException("Gagal melepaskan reservasi stok: " . ($rel['message'] ?? ''));
+                }
+
+                $stmt_up = $conn->prepare("
+                    UPDATE transaksi 
+                    SET status_pembayaran = 'Dibatalkan' 
+                    WHERE id_transaksi = ? AND status_pembayaran NOT IN ('Lunas', 'Refund', 'Dibatalkan')
+                ");
+                if (!$stmt_up) {
+                    throw new RuntimeException("Gagal menyiapkan kueri pembatalan transaksi.");
+                }
+                $stmt_up->bind_param("i", $id_cancel);
+                $stmt_up->execute();
+                $stmt_up->close();
+
+                $conn->commit();
+            } catch (\Throwable $e) {
+                if ($conn instanceof mysqli && $conn->connect_errno === 0) {
+                    $conn->rollback();
+                }
+                error_log("Gagal membatalkan transaksi [{$id_cancel}]: " . $e->getMessage());
+            }
+        }
     }
     header('Location: produk_user.php');
-    exit;
-}
-
-if (!isset($_SESSION['id_pelanggan'])) {
-    header("Location: ../login.php");
     exit;
 }
 
