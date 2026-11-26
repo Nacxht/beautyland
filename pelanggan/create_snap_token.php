@@ -607,41 +607,100 @@ try {
     // Tandai status 'Gagal' dan lepaskan reservasi stok secara atomik.
     // F-01: Pastikan hanya memperbarui jika status pembayaran belum terminal.
     // =========================================================================
-    $stmt_fail = $conn->prepare("
-        UPDATE transaksi 
-        SET snap_status = 'Gagal' 
-        WHERE id_transaksi = ? AND status_pembayaran = 'Menunggu Pembayaran'
-    ");
-    if ($stmt_fail) {
+    $release_succeeded = false;
+    $conn->begin_transaction();
+    try {
+        $stmt_lock_trx = $conn->prepare("
+            SELECT id_transaksi, status_pembayaran 
+            FROM transaksi 
+            WHERE id_transaksi = ? 
+            FOR UPDATE
+        ");
+        if (!$stmt_lock_trx) {
+            throw new RuntimeException("Gagal mempersiapkan kueri lock transaksi untuk Tahap 3C.");
+        }
+        $stmt_lock_trx->bind_param("i", $id_transaksi);
+        $stmt_lock_trx->execute();
+        $locked_trx = $stmt_lock_trx->get_result()->fetch_assoc();
+        $stmt_lock_trx->close();
+
+        if (!$locked_trx) {
+            throw new RuntimeException("Transaksi [{$id_transaksi}] tidak ditemukan untuk Tahap 3C.");
+        }
+
+        $locked_pay_status = (string)($locked_trx['status_pembayaran'] ?? '');
+        if (in_array($locked_pay_status, ['Lunas', 'Dibatalkan', 'Refund'], true)) {
+            $conn->rollback();
+
+            ob_clean();
+            http_response_code(409);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Status pesanan telah berubah. Silakan periksa riwayat pesanan Anda.'
+            ]);
+            exit;
+        }
+
+        $rel = release_stock_reservation($conn, $id_transaksi, true);
+        if (!$rel['success']) {
+            throw new RuntimeException("Release reservasi gagal: " . ($rel['message'] ?? 'Tidak diketahui'));
+        }
+
+        $stmt_fail = $conn->prepare("
+            UPDATE transaksi 
+            SET snap_status = 'Gagal' 
+            WHERE id_transaksi = ? AND status_pembayaran = 'Menunggu Pembayaran'
+        ");
+        if (!$stmt_fail) {
+            throw new RuntimeException("Gagal mempersiapkan kueri pembaruan snap_status.");
+        }
         $stmt_fail->bind_param("i", $id_transaksi);
         $stmt_fail->execute();
         $stmt_fail->close();
-    }
 
-    // Lepas reservasi stok secara atomik
-    $conn->begin_transaction();
-    try {
-        $rel = release_stock_reservation($conn, $id_transaksi);
-        if (!$rel['success']) {
-            throw new RuntimeException($rel['message'] ?? 'Gagal melepas reservasi.');
-        }
         $conn->commit();
+        $release_succeeded = true;
     } catch (\Throwable $rel_err) {
-        $conn->rollback();
-        error_log("Gagal melepas reservasi untuk transaksi [{$id_transaksi}]: " . $rel_err->getMessage());
+        if ($conn instanceof mysqli && $conn->connect_errno === 0) {
+            $conn->rollback();
+        }
+        error_log("CRITICAL [SNAP_FAIL_RELEASE_FAILED]: Gagal melepas reservasi dan menandai status gagal untuk transaksi [{$id_transaksi}]: " . $rel_err->getMessage());
+
+        try {
+            if ($conn instanceof mysqli && $conn->connect_errno === 0 && @$conn->ping()) {
+                $stmt_recon = $conn->prepare("
+                    UPDATE transaksi 
+                    SET snap_status = 'Perlu Rekonsiliasi' 
+                    WHERE id_transaksi = ? AND status_pembayaran = 'Menunggu Pembayaran'
+                ");
+                if ($stmt_recon) {
+                    $stmt_recon->bind_param("i", $id_transaksi);
+                    $stmt_recon->execute();
+                    $stmt_recon->close();
+                }
+            }
+        } catch (\Throwable $ignored) {
+        }
     }
 
-    // Buat idempotency key baru pada pending_order hanya setelah kegagalan definitif dan reservasi dilepas
-    if (isset($_SESSION['pending_order'])) {
+    if ($release_succeeded && isset($_SESSION['pending_order'])) {
         $_SESSION['pending_order']['checkout_idempotency_key'] = bin2hex(random_bytes(16));
     }
 
     ob_clean();
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Gagal menginisiasi pembayaran dengan gateway Midtrans. Silakan periksa kembali pesanan Anda atau ulangi beberapa saat lagi.'
-    ]);
+    if ($release_succeeded) {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Gagal menginisiasi pembayaran dengan gateway Midtrans. Silakan periksa kembali pesanan Anda atau ulangi beberapa saat lagi.'
+        ]);
+    } else {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Gagal menginisiasi pembayaran dan gagal melepaskan reservasi stok. Pesanan Anda memerlukan rekonsiliasi. Mohon periksa riwayat pesanan atau hubungi dukungan.'
+        ]);
+    }
     exit;
 }
 

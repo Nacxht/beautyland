@@ -46,7 +46,8 @@ if (isset($_POST['action']) && $_POST['action'] === 'cancel') {
                     exit;
                 }
 
-                $rel = release_stock_reservation($conn, $id_cancel);
+                $is_midtrans = (($trx['metode_pembayaran'] ?? '') === 'Midtrans');
+                $rel = release_stock_reservation($conn, $id_cancel, $is_midtrans);
                 if (!$rel['success']) {
                     throw new RuntimeException("Gagal melepaskan reservasi stok: " . ($rel['message'] ?? ''));
                 }
